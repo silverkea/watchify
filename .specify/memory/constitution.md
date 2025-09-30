@@ -1,14 +1,14 @@
 <!--
 Sync Impact Report:
-- Version change: [none] → 1.0.0 (initial constitution)
-- List of modified principles: Initial creation of all principles
-- Added sections: All core principles, architecture constraints, development workflow
+- Version change: 1.0.0 → 1.0.1 (patch: ratification date update)
+- List of modified principles: None
+- Added sections: None
 - Removed sections: None
 - Templates requiring updates:
-  ✅ plan-template.md: Constitution Check section updated with specific principle gates
+  ✅ plan-template.md: Constitution Check section already aligned
   ✅ spec-template.md: Requirements alignment maintained (no changes needed)
   ✅ tasks-template.md: TDD workflow aligns with Principle I (no changes needed)
-- Follow-up TODOs: Set actual ratification date when project formally adopts constitution
+- Follow-up TODOs: None - constitution fully complete
 -->
 
 # Watchify Constitution
@@ -86,4 +86,4 @@ This constitution supersedes all other development practices. Amendments require
 
 All pull requests and code reviews MUST verify compliance with these principles. Violations require justification or refactoring. When in doubt, favor simplicity and adherence to these core principles.
 
-**Version**: 1.0.0 | **Ratified**: TODO(RATIFICATION_DATE): Set when project formally adopts | **Last Amended**: 2025-09-30
+**Version**: 1.0.1 | **Ratified**: 2025-09-30 | **Last Amended**: 2025-09-30
