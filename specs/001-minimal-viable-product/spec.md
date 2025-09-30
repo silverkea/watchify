@@ -15,6 +15,11 @@
 - Q: What type of date/time selection interface should be used for scheduling watch parties? → A: Calendar picker with time dropdown menus
 - Q: How should the system behave when the external movie API is unavailable? → A: Display error message and disable movie browsing completely
 - Q: Should additional sharing mechanisms be included beyond the copy link feature? → A: No, copy link is sufficient for MVP
+- Q: What is the expected scale for concurrent users during peak watch party events? → A: Small groups: 5-20 concurrent users per watch party, 100 total concurrent users
+- Q: What authentication and user management approach should be used? → A: No authentication: Anonymous users can create and join watch parties
+- Q: How long should watch party data be stored and accessible? → A: Nothing is stored, the link itself contains all data needed
+- Q: What should happen when someone accesses a watch party URL after the scheduled time has passed? → A: Show "Watching Now" until 4 hours after start time, then show "Complete"
+- Q: What should be the maximum length or size limit for the base64 encoded URL payload? → A: Standard URL limit: 2048 characters total URL length
 
 ## User Scenarios & Testing
 
@@ -27,7 +32,7 @@ A user wants to discover movies, select one they're interested in, and coordinat
 3. **Given** the user clicks on a movie from the grid, **When** the movie detail page loads, **Then** they see expanded information including synopsis and main actors
 4. **Given** the user is on a movie detail page, **When** they select a date and time for a watch party, **Then** they can create a watch party with those details
 5. **Given** the user has scheduled a watch party, **When** they access the watch party landing page, **Then** they see a countdown timer and all movie details
-6. **Given** the countdown timer reaches zero, **When** the time expires, **Then** the timer is replaced with "Start Watching" message
+6. **Given** the countdown timer reaches zero, **When** the time expires, **Then** the timer is replaced with "Watching Now" message, and after 4 hours shows "Complete"
 7. **Given** the user is on a watch party landing page, **When** they click the "Copy Link" button, **Then** a shareable URL is copied to their clipboard
 8. **Given** someone opens a shared watch party URL, **When** the page loads, **Then** they see the same movie details and countdown timer in their local timezone
 
@@ -51,25 +56,28 @@ A user wants to discover movies, select one they're interested in, and coordinat
 - **FR-005**: System MUST allow users to schedule watch parties using a calendar picker for date selection and dropdown menus for time selection
 - **FR-006**: System MUST generate a unique watch party landing page for each scheduled party
 - **FR-007**: System MUST display a prominent countdown timer on watch party pages
-- **FR-008**: System MUST replace countdown timer with "Start Watching" message when time reaches zero
+- **FR-008**: System MUST replace countdown timer with "Watching Now" message when time reaches zero, then "Complete" after 4 hours
 - **FR-009**: System MUST display all movie details below the countdown timer on watch party pages
 - **FR-010**: System MUST provide a "Copy Link" button below the countdown timer on watch party pages
 - **FR-011**: System MUST generate shareable URLs with base64 encoded movie and watch party data in query string when copy link is used
-- **FR-012**: System MUST reconstruct watch party landing page from base64 encoded URL parameters
+- **FR-012**: System MUST reconstruct watch party landing page from base64 encoded URL parameters without requiring server-side storage
 - **FR-013**: System MUST display countdown timer in user's local timezone based on browser settings
 - **FR-014**: System MUST synchronize countdown timing globally using UTC storage with client-side timezone conversion for display
 - **FR-015**: System MUST integrate with external movie API (e.g., TMDB) for real-time movie data fetching
+- **FR-016**: System MUST allow anonymous users to create and join watch parties without authentication or account creation
 
 ### Non-Functional Requirements
 - **NFR-001**: Movie search results MUST load within 2 seconds with 95% success rate for acceptable user experience
 - **NFR-002**: When external movie API is unavailable, system MUST display clear error message and disable movie browsing functionality
+- **NFR-003**: System MUST support up to 100 concurrent users with individual watch parties accommodating 5-20 participants each
+- **NFR-004**: Shareable URLs MUST not exceed 2048 characters total length to ensure cross-platform compatibility
 
 ### Key Entities
 - **Movie**: Represents a film with title, release date, star rating, poster image, synopsis, cast members, and genre classifications
-- **Watch Party**: Represents a scheduled viewing event with movie reference, date/time, unique landing page, and shareable URL with encoded data
-- **User**: Represents someone who can search movies, view details, create watch parties, and share watch party links
+- **Watch Party**: Represents a scheduled viewing event with movie reference, date/time, and encoded data for stateless URL sharing without server-side persistence
+- **User**: Represents an anonymous visitor who can search movies, view details, create watch parties, and share watch party links without requiring authentication
 - **Genre**: Represents movie categories for filtering (action, comedy, drama, etc.)
-- **Shareable URL**: Represents encoded watch party data in base64 format within query parameters for cross-platform sharing
+- **Shareable URL**: Represents encoded watch party data in base64 format within query parameters for cross-platform sharing, limited to 2048 characters total URL length
 
 ---
 
