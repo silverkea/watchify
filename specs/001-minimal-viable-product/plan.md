@@ -35,14 +35,14 @@ Movie Watch Party Platform MVP enabling users to search movies, view details, sc
 
 ## Technical Context
 **Language/Version**: TypeScript with Next.js 14+ and React 18+
-**Primary Dependencies**: Next.js, React, Tailwind CSS, ShadCN/UI components, TMDB/OMDB API
-**Storage**: Vercel KV for watch party data, localStorage for theme preferences
+**Primary Dependencies**: Next.js, React, Tailwind CSS, ShadCN/UI components, TMDB API
+**Storage**: No server-side storage required - stateless architecture with URL-encoded data, localStorage for theme preferences
 **Testing**: Jest for unit tests, Cucumber with TypeScript for end-to-end tests
 **Target Platform**: Web application deployed on Vercel with server-side rendering
 **Project Type**: web (frontend + backend API routes)
 **Performance Goals**: <2 second movie search response time, real-time countdown synchronization
-**Constraints**: External API rate limits, Vercel free tier limitations, secure API key management
-**Scale/Scope**: MVP for small groups, 100+ concurrent users, responsive design for mobile/desktop
+**Constraints**: External API rate limits, Vercel free tier limitations, secure API key management, 2048 character URL limits
+**Scale/Scope**: MVP for small groups, 100 concurrent users max, responsive design for mobile/desktop
 
 ## Constitution Check
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
@@ -69,7 +69,7 @@ Movie Watch Party Platform MVP enabling users to search movies, view details, sc
 - [x] Component documentation strategy defined
 
 **Principle V - Contract-First Integration**:
-- [x] All integration points have explicit contracts defined (TMDB/OMDB API, watch party data)
+- [x] All integration points have explicit contracts defined (TMDB API, stateless URL encoding)
 - [x] API endpoints documented before implementation (Next.js API routes)
 - [x] Component interfaces specified before coding (TypeScript interfaces)
 
