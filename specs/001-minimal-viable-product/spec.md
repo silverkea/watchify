@@ -38,6 +38,7 @@ A user wants to discover movies, select one they're interested in, and coordinat
 - How does the system behave when movie data (poster, details) is unavailable?
 - What happens when someone accesses a watch party URL with corrupted base64 data?
 - How does the system handle users in different timezones accessing the same watch party?
+- How does the system handle concurrent modifications to the same watch party?
 - When external movie API is unavailable, system displays error message and disables movie browsing
 
 ## Requirements
@@ -46,7 +47,7 @@ A user wants to discover movies, select one they're interested in, and coordinat
 - **FR-001**: System MUST allow users to search for movies by title or keyword
 - **FR-002**: System MUST display movies in a grid layout with poster image, title, release date, and star rating
 - **FR-003**: System MUST provide genre filtering capability for the movie grid
-- **FR-004**: System MUST display detailed movie information including synopsis and main actors when a movie is selected
+- **FR-004**: System MUST display detailed movie information including synopsis and cast members when a movie is selected
 - **FR-005**: System MUST allow users to schedule watch parties using a calendar picker for date selection and dropdown menus for time selection
 - **FR-006**: System MUST generate a unique watch party landing page for each scheduled party
 - **FR-007**: System MUST display a prominent countdown timer on watch party pages
@@ -56,15 +57,15 @@ A user wants to discover movies, select one they're interested in, and coordinat
 - **FR-011**: System MUST generate shareable URLs with base64 encoded movie and watch party data in query string when copy link is used
 - **FR-012**: System MUST reconstruct watch party landing page from base64 encoded URL parameters
 - **FR-013**: System MUST display countdown timer in user's local timezone based on browser settings
-- **FR-014**: System MUST synchronize countdown timing globally while displaying in each user's local timezone
-- **FR-015**: System MUST integrate with external movie API (e.g., TMDB, OMDB) for real-time movie data fetching
+- **FR-014**: System MUST synchronize countdown timing globally using UTC storage with client-side timezone conversion for display
+- **FR-015**: System MUST integrate with external movie API (e.g., TMDB) for real-time movie data fetching
 
 ### Non-Functional Requirements
-- **NFR-001**: Movie search results MUST load within 2 seconds for acceptable user experience
+- **NFR-001**: Movie search results MUST load within 2 seconds with 95% success rate for acceptable user experience
 - **NFR-002**: When external movie API is unavailable, system MUST display clear error message and disable movie browsing functionality
 
 ### Key Entities
-- **Movie**: Represents a film with title, release date, star rating, poster image, synopsis, main actors, and genre classifications
+- **Movie**: Represents a film with title, release date, star rating, poster image, synopsis, cast members, and genre classifications
 - **Watch Party**: Represents a scheduled viewing event with movie reference, date/time, unique landing page, and shareable URL with encoded data
 - **User**: Represents someone who can search movies, view details, create watch parties, and share watch party links
 - **Genre**: Represents movie categories for filtering (action, comedy, drama, etc.)
