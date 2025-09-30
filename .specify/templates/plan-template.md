@@ -47,33 +47,7 @@
 ## Constitution Check
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-**Principle I - Test-Driven Development (NON-NEGOTIABLE)**:
-- [ ] All tests written before implementation code
-- [ ] Red-Green-Refactor cycle planned for each component
-- [ ] No production code without corresponding failing test
-
-**Principle II - Clean Architecture with Folder-by-Feature**:
-- [ ] Feature boundaries clearly defined and documented
-- [ ] Dependencies flow inward toward domain core
-- [ ] Each feature is self-contained with minimal cross-feature dependencies
-- [ ] Folder structure follows clean architecture layers
-
-**Principle III - Atomic Design for UI Components**:
-- [ ] UI components organized by atomic design hierarchy (atoms → molecules → organisms → templates → pages)
-- [ ] Component dependencies respect atomic design principles
-- [ ] Clear separation between design system and feature-specific components
-
-**Principle IV - Storybook Documentation (NON-NEGOTIABLE)**:
-- [ ] All UI components will have corresponding Storybook stories
-- [ ] Story coverage includes all component states and props
-- [ ] Component documentation strategy defined
-
-**Principle V - Contract-First Integration**:
-- [ ] All integration points have explicit contracts defined
-- [ ] API endpoints documented before implementation
-- [ ] Component interfaces specified before coding
-
-*If any principle shows violations, document justification in Complexity Tracking section*
+[Gates determined based on constitution file]
 
 ## Project Structure
 
@@ -178,7 +152,7 @@ directories captured above]
    - Quickstart test = story validation steps
 
 5. **Update agent file incrementally** (O(1) operation):
-   - Run `.specify/scripts/bash/update-agent-context.sh copilot`
+   - Run `.specify/scripts/powershell/update-agent-context.ps1 -AgentType copilot`
      **IMPORTANT**: Execute it exactly as specified above. Do not add or remove any arguments.
    - If exists: Add only NEW tech from current plan
    - Preserve manual additions between markers
@@ -242,4 +216,4 @@ directories captured above]
 - [ ] Complexity deviations documented
 
 ---
-*Based on Constitution v1.0.1 - See `.specify/memory/constitution.md`*
+*Based on Constitution v2.1.1 - See `/memory/constitution.md`*
