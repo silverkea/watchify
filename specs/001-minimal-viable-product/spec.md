@@ -7,6 +7,15 @@
 
 ---
 
+## Clarifications
+
+### Session 2025-09-30
+- Q: What will be the primary source for movie data? → A: External API (e.g., TMDB, OMDB) with real-time fetching
+- Q: What should be the maximum acceptable response time for movie search results? → A: Under 2 seconds for acceptable performance
+- Q: What type of date/time selection interface should be used for scheduling watch parties? → A: Calendar picker with time dropdown menus
+- Q: How should the system behave when the external movie API is unavailable? → A: Display error message and disable movie browsing completely
+- Q: Should additional sharing mechanisms be included beyond the copy link feature? → A: No, copy link is sufficient for MVP
+
 ## User Scenarios & Testing
 
 ### Primary User Story
@@ -29,6 +38,7 @@ A user wants to discover movies, select one they're interested in, and coordinat
 - How does the system behave when movie data (poster, details) is unavailable?
 - What happens when someone accesses a watch party URL with corrupted base64 data?
 - How does the system handle users in different timezones accessing the same watch party?
+- When external movie API is unavailable, system displays error message and disables movie browsing
 
 ## Requirements
 
@@ -37,7 +47,7 @@ A user wants to discover movies, select one they're interested in, and coordinat
 - **FR-002**: System MUST display movies in a grid layout with poster image, title, release date, and star rating
 - **FR-003**: System MUST provide genre filtering capability for the movie grid
 - **FR-004**: System MUST display detailed movie information including synopsis and main actors when a movie is selected
-- **FR-005**: System MUST allow users to schedule watch parties with date and time selection
+- **FR-005**: System MUST allow users to schedule watch parties using a calendar picker for date selection and dropdown menus for time selection
 - **FR-006**: System MUST generate a unique watch party landing page for each scheduled party
 - **FR-007**: System MUST display a prominent countdown timer on watch party pages
 - **FR-008**: System MUST replace countdown timer with "Start Watching" message when time reaches zero
@@ -47,8 +57,11 @@ A user wants to discover movies, select one they're interested in, and coordinat
 - **FR-012**: System MUST reconstruct watch party landing page from base64 encoded URL parameters
 - **FR-013**: System MUST display countdown timer in user's local timezone based on browser settings
 - **FR-014**: System MUST synchronize countdown timing globally while displaying in each user's local timezone
-- **FR-015**: System MUST provide [NEEDS CLARIFICATION: movie data source not specified - external API, local database, streaming service integration?]
-- **FR-016**: Users MUST be able to [NEEDS CLARIFICATION: additional sharing mechanisms beyond copy link not specified - email, social media integration?]
+- **FR-015**: System MUST integrate with external movie API (e.g., TMDB, OMDB) for real-time movie data fetching
+
+### Non-Functional Requirements
+- **NFR-001**: Movie search results MUST load within 2 seconds for acceptable user experience
+- **NFR-002**: When external movie API is unavailable, system MUST display clear error message and disable movie browsing functionality
 
 ### Key Entities
 - **Movie**: Represents a film with title, release date, star rating, poster image, synopsis, main actors, and genre classifications
@@ -68,7 +81,7 @@ A user wants to discover movies, select one they're interested in, and coordinat
 - [x] All mandatory sections completed
 
 ### Requirement Completeness
-- [ ] No [NEEDS CLARIFICATION] markers remain
+- [x] No [NEEDS CLARIFICATION] markers remain
 - [x] Requirements are testable and unambiguous  
 - [x] Success criteria are measurable
 - [x] Scope is clearly bounded
@@ -84,6 +97,6 @@ A user wants to discover movies, select one they're interested in, and coordinat
 - [x] User scenarios defined
 - [x] Requirements generated
 - [x] Entities identified
-- [ ] Review checklist passed (pending clarifications)
+- [x] Review checklist passed
 
 ---
