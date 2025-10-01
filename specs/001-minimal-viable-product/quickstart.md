@@ -142,17 +142,43 @@ curl -X POST "http://localhost:3000/api/watch-party/create" \
 
 ## Automated Testing
 
+### Install Testing Dependencies
+```bash
+# Install Playwright browsers
+npx playwright install
+# or
+pnpm exec playwright install
+
+# Install Chromium only (lighter for CI)
+npx playwright install chromium
+```
+
 ### Run Test Suite
 ```bash
-# Unit tests
+# Unit tests (Jest)
 npm run test
 # or
 pnpm test
 
-# End-to-end tests
+# End-to-end tests (Cucumber + Playwright)
 npm run test:e2e
 # or
 pnpm test:e2e
+
+# Run specific feature
+npm run test:e2e -- --name "Movie search"
+# or
+pnpm test:e2e --name "Movie search"
+
+# Run tests in headless mode (default)
+npm run test:e2e:headless
+# or
+pnpm test:e2e:headless
+
+# Run tests with browser UI (debugging)
+npm run test:e2e:headed
+# or
+pnpm test:e2e:headed
 
 # Test coverage
 npm run test:coverage
@@ -247,6 +273,43 @@ wait
 - Calendar-based scheduling interface
 - Synchronized countdown timers
 - Base64 encoded shareable URLs
+
+## TDD Development Workflow
+
+### Red-Green-Refactor Cycle
+```bash
+# 1. Write failing test first
+npm run test:watch  # Unit tests in watch mode
+
+# 2. Write minimal code to pass
+npm run test        # Verify unit tests pass
+
+# 3. Write E2E test for feature
+npm run test:e2e:headed  # Debug E2E with browser UI
+
+# 4. Refactor and verify all tests pass
+npm run test:all    # Run full test suite
+```
+
+### Feature Development Steps
+1. **Create Cucumber feature file** (`features/*.feature`)
+2. **Write failing unit tests** (components, hooks, utils)
+3. **Implement minimal code** to pass unit tests
+4. **Write Playwright step definitions** (`features/steps/*.ts`)
+5. **Run E2E tests** and verify Cucumber scenarios pass
+6. **Refactor** while maintaining test coverage
+
+### Playwright-Specific Debugging
+```bash
+# Debug mode with browser DevTools
+npm run test:e2e:debug
+
+# Record new tests with Playwright Codegen
+npx playwright codegen localhost:3000
+
+# View test reports
+npx playwright show-report
+```
 
 ✅ **Technical Requirements Met**:
 - Next.js with TypeScript setup

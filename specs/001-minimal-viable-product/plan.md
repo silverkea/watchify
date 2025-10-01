@@ -1,8 +1,8 @@
 
-# Implementation Plan: Movie Watch Party Platform MVP
+# Implementation Plan: [FEATURE]
 
-**Branch**: `001-minimal-viable-product` | **Date**: 2025-09-30 | **Spec**: [spec.md](./spec.md)
-**Input**: Feature specification from `C:\code\personal\watchify\specs\001-minimal-viable-product\spec.md`
+**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
+**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
 
 ## Execution Flow (/plan command scope)
 ```
@@ -31,13 +31,13 @@
 - Phase 3-4: Implementation execution (manual or via tools)
 
 ## Summary
-Movie Watch Party Platform MVP enabling users to search movies, view details, schedule synchronized watch parties with countdown timers, and share via encoded URLs. Built with Next.js/TypeScript, modern UI with light/dark themes, external movie API integration, and Vercel deployment.
+[Extract from feature spec: primary requirement + technical approach from research]
 
 ## Technical Context
 **Language/Version**: TypeScript with Next.js 14+ and React 18+
-**Primary Dependencies**: Next.js, React, Tailwind CSS, ShadCN/UI components, TMDB API
+**Primary Dependencies**: Next.js, React, Tailwind CSS, ShadCN/UI components, TMDB API, Playwright for E2E testing
 **Storage**: No server-side storage required - stateless architecture with URL-encoded data, localStorage for theme preferences
-**Testing**: Jest for unit tests, Cucumber with TypeScript for end-to-end tests
+**Testing**: Jest for unit tests, Cucumber with Playwright for end-to-end browser automation, Storybook for component documentation
 **Target Platform**: Web application deployed on Vercel with server-side rendering
 **Project Type**: web (frontend + backend API routes)
 **Performance Goals**: <2 second movie search response time, real-time countdown synchronization
@@ -48,7 +48,7 @@ Movie Watch Party Platform MVP enabling users to search movies, view details, sc
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
 **Principle I - Test-Driven Development (NON-NEGOTIABLE)**:
-- [x] All tests written before implementation code (Jest unit tests, Cucumber E2E tests)
+- [x] All tests written before implementation code (Jest unit tests, Cucumber E2E tests with Playwright)
 - [x] Red-Green-Refactor cycle planned for each component
 - [x] No production code without corresponding failing test
 
@@ -89,50 +89,88 @@ specs/[###-feature]/
 ```
 
 ### Source Code (repository root)
-<!--
-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
-  not include Option labels.
--->
 ```
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
 src/
-├── models/
-├── services/
-├── cli/
-└── lib/
+├── app/                    # Next.js App Router
+│   ├── api/               # API routes (serverless functions)
+│   │   ├── movies/
+│   │   │   ├── search/
+│   │   │   └── [id]/
+│   │   └── genres/
+│   ├── (home)/            # Home page route group
+│   ├── movies/            # Movie details pages
+│   │   └── [id]/
+│   └── watch-party/       # Watch party pages
+│       └── [encoded]/
+├── features/              # Folder-by-feature organization
+│   ├── movie-search/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── services/
+│   │   └── types/
+│   ├── movie-details/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── services/
+│   │   └── types/
+│   └── watch-party/
+│       ├── components/
+│       ├── hooks/
+│       ├── services/
+│       └── types/
+├── components/            # Atomic design hierarchy
+│   ├── atoms/
+│   ├── molecules/
+│   ├── organisms/
+│   └── templates/
+├── lib/                   # Utilities and configurations
+│   ├── tmdb.ts           # TMDB API client
+│   ├── utils.ts          # General utilities
+│   └── validations.ts    # Zod schemas
+└── types/                 # Global TypeScript types
+    ├── movie.ts
+    ├── watchparty.ts
+    └── api.ts
 
 tests/
-├── contract/
-├── integration/
-└── unit/
-
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
-
-frontend/
-├── src/
+├── contract/              # API contract tests
+│   ├── movie-search-api.test.ts
+│   ├── movie-details-api.test.ts
+│   └── genres-api.test.ts
+├── integration/           # Cucumber feature files
+│   ├── movie-discovery.feature
+│   ├── watch-party-flow.feature
+│   └── countdown-timer.feature
+├── step-definitions/      # Cucumber step definitions with Playwright
+│   ├── movie-discovery.steps.ts
+│   ├── watch-party-flow.steps.ts
+│   ├── countdown-timer.steps.ts
+│   └── support/          # Playwright setup and utilities
+│       ├── world.ts      # Cucumber World with Playwright
+│       ├── hooks.ts      # Before/After hooks
+│       └── fixtures.ts   # Test data
+├── unit/                  # Jest unit tests
 │   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
+│   │   ├── atoms/
+│   │   ├── molecules/
+│   │   ├── organisms/
+│   │   └── templates/
+│   ├── features/
+│   │   ├── movie-search/
+│   │   ├── movie-details/
+│   │   └── watch-party/
+│   └── lib/
+└── playwright.config.ts  # Playwright configuration
 
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+.storybook/               # Storybook configuration
+stories/                  # Component stories
+├── atoms/
+├── molecules/
+├── organisms/
+└── templates/
 ```
 
-**Structure Decision**: [Document the selected structure and reference the real
-directories captured above]
+**Structure Decision**: Web application structure with Next.js App Router, folder-by-feature organization, and Playwright integration for Cucumber E2E tests. The testing structure supports three levels: contract tests for API endpoints, Cucumber E2E tests with Playwright for user workflows, and Jest unit tests for components and utilities.
 
 ## Phase 0: Outline & Research
 1. **Extract unknowns from Technical Context** above:

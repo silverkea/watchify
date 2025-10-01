@@ -60,18 +60,31 @@
 - Zustand: Additional dependency not needed
 - React Query: May add later for API caching
 
-### Testing Strategy: Jest + Cucumber
-**Decision**: Jest for unit tests, Cucumber with TypeScript for E2E  
+### Testing Strategy: Jest + Cucumber with Playwright
+**Decision**: Jest for unit tests, Cucumber with Playwright for E2E browser automation  
 **Rationale**:
 - Jest integrates seamlessly with Next.js
 - Cucumber provides business-readable test scenarios
-- TypeScript support for both testing frameworks
+- Playwright offers reliable cross-browser testing
+- Full automation of user interactions (click, type, navigate)
+- Excellent debugging capabilities with trace viewer
+- TypeScript support for all testing frameworks
 - Aligns with TDD constitutional requirement
 
 **Alternatives considered**:
-- Cypress: More complex setup, heavier resource usage
-- Playwright: Newer, less ecosystem support
+- Cypress: Good but Playwright has better performance and reliability
+- Selenium: Older technology, more brittle tests
+- Pure Cucumber without browser automation: Limited to API testing only
 - Vitest: Good but Jest is more established with Next.js
+
+**Playwright Integration Benefits**:
+- Real browser automation for authentic user experience testing
+- Built-in waiting mechanisms reduce flaky tests
+- Parallel test execution for faster feedback
+- Visual comparison testing capabilities
+- Network interception for API mocking
+- Mobile device simulation
+- Automatic screenshot/video capture on failures
 
 ### Deployment: Vercel
 **Decision**: Vercel platform for hosting  

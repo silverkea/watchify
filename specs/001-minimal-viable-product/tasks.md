@@ -7,22 +7,25 @@
 ```
 1. Load plan.md from feature directory ✓
    → Tech stack: Next.js 14+, TypeScript, Tailwind CSS, ShadCN/UI
+   → Testing: Jest + Cucumber with Playwright for E2E browser automation
    → Structure: Web app with folder-by-feature organization
 2. Load design documents ✓:
    → data-model.md: Movie, Genre, CastMember, WatchParty, ShareableURLData
    → contracts/: 3 API endpoints (movie-search, movie-details, genres)
-   → research.md: TMDB API, Vercel deployment, Jest/Cucumber testing
+   → research.md: TMDB API, Vercel deployment, Playwright vs alternatives
+   → quickstart.md: TDD workflow with Playwright debugging tools
 3. Generate tasks by category ✓:
-   → Setup: Next.js project, dependencies, environment config
-   → Tests: 3 contract tests, 3 integration scenarios, 1 unit test
+   → Setup: Next.js project, Playwright browsers, dependencies
+   → Tests: 3 contract tests, 3 Cucumber features with Playwright step definitions
    → Core: 5 data models, 3 API endpoints, UI components
    → Integration: TMDB service, URL encoding, theme system
-   → Polish: unit tests, performance, documentation
+   → Polish: unit tests, Storybook stories, performance
 4. Apply task rules ✓:
    → Different files = [P] for parallel execution
    → Tests before implementation (TDD principle)
-5. Number tasks sequentially T001-T044
-6. Dependencies verified: Tests → Models → Services → UI → Polish
+   → Playwright setup for cross-browser automation
+5. Number tasks sequentially T001-T055
+6. Dependencies verified: Setup → Tests → Models → Services → UI → Polish
 ```
 
 ## Format: `[ID] [P?] Description`
@@ -35,91 +38,119 @@
 - **Atomic Design**: `src/components/atoms/`, `molecules/`, `organisms/`
 
 ## Phase 3.1: Setup
-- [ ] T001 Create Next.js project structure with TypeScript and folder-by-feature organization: src/app/, src/components/atoms|molecules|organisms/, src/features/movie-search|watch-party/, src/lib/, src/types/, tests/contract|integration|unit/
-- [ ] T002 Install and configure dependencies: Tailwind CSS, ShadCN/UI, Zod, date-fns
-- [ ] T003 [P] Configure ESLint, Prettier, and Jest testing environment
-- [ ] T004 [P] Setup environment variables and .env.local template with TMDB API configuration
-- [ ] T005 [P] Configure Tailwind CSS with dark/light theme support and neon color palette
+- [ ] T001 Create Next.js project structure with TypeScript and folder-by-feature organization: src/app/, src/components/atoms|molecules|organisms/, src/features/movie-search|watch-party/, src/lib/, src/types/, tests/contract|integration|step-definitions/
+- [ ] T002 Install and configure dependencies: Tailwind CSS, ShadCN/UI, Zod, date-fns, Playwright, Cucumber
+- [ ] T003 [P] Configure Playwright browsers and Cucumber integration in playwright.config.ts and cucumber.js
+- [ ] T004 [P] Configure ESLint, Prettier, and Jest testing environment
+- [ ] T005 [P] Setup environment variables and .env.local template with TMDB API configuration
+- [ ] T006 [P] Configure Tailwind CSS with dark/light theme support and neon color palette
 
 ## Phase 3.2: Tests First (TDD) ⚠️ MUST COMPLETE BEFORE 3.3
 **CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation**
-- [ ] T006 [P] Contract test GET /api/movies/search in tests/contract/movie-search-api.test.ts
-- [ ] T007 [P] Contract test GET /api/movies/[id] in tests/contract/movie-details-api.test.ts
-- [ ] T008 [P] Contract test GET /api/genres in tests/contract/genres-api.test.ts
-- [ ] T009 [P] Integration test: Movie search and grid display in tests/integration/movie-discovery.feature
-- [ ] T010 [P] Integration test: Movie details and watch party creation in tests/integration/watch-party-flow.feature
-- [ ] T011 [P] Integration test: Watch party countdown and sharing in tests/integration/countdown-timer.feature
-- [ ] T012 [P] Unit test: URL encoding/decoding for watch party data in tests/unit/url-encoder.test.ts
+
+### Contract Tests (API Endpoints)
+- [ ] T007 [P] Contract test GET /api/movies/search in tests/contract/movie-search-api.test.ts
+- [ ] T008 [P] Contract test GET /api/movies/[id] in tests/contract/movie-details-api.test.ts
+- [ ] T009 [P] Contract test GET /api/genres in tests/contract/genres-api.test.ts
+
+### E2E Tests (Cucumber + Playwright)  
+- [ ] T010 [P] Cucumber feature: Movie discovery flow in tests/integration/movie-discovery.feature
+- [ ] T011 [P] Cucumber feature: Watch party creation in tests/integration/watch-party-flow.feature
+- [ ] T012 [P] Cucumber feature: Countdown timer behavior in tests/integration/countdown-timer.feature
+
+### Playwright Step Definitions
+- [ ] T013 [P] Movie discovery steps in tests/step-definitions/movie-discovery.steps.ts
+- [ ] T014 [P] Watch party flow steps in tests/step-definitions/watch-party-flow.steps.ts
+- [ ] T015 [P] Countdown timer steps in tests/step-definitions/countdown-timer.steps.ts
+- [ ] T016 [P] Playwright World setup in tests/step-definitions/support/world.ts
+- [ ] T017 [P] Cucumber hooks with Playwright in tests/step-definitions/support/hooks.ts
+- [ ] T018 [P] Unit test: URL encoding/decoding for watch party data in tests/unit/url-encoder.test.ts
 
 ## Phase 3.3: Data Models (ONLY after tests are failing)
-- [ ] T013 [P] Movie interface and Zod schema in src/types/movie.ts
-- [ ] T014 [P] Genre interface and Zod schema in src/types/genre.ts
-- [ ] T015 [P] CastMember interface and Zod schema in src/types/cast.ts
-- [ ] T016 [P] WatchParty interface and Zod schema in src/types/watch-party.ts
-- [ ] T017 [P] ShareableURLData interface and Zod schema in src/types/shareable-url.ts
+- [ ] T019 [P] Movie interface and Zod schema in src/types/movie.ts
+- [ ] T020 [P] Genre interface and Zod schema in src/types/genre.ts
+- [ ] T021 [P] CastMember interface and Zod schema in src/types/cast.ts
+- [ ] T022 [P] WatchParty interface and Zod schema in src/types/watch-party.ts
+- [ ] T023 [P] ShareableURLData interface and Zod schema in src/types/shareable-url.ts
 
 ## Phase 3.4: External Services
-- [ ] T018 [P] TMDB API client with caching in src/lib/tmdb.ts
-- [ ] T019 [P] URL encoding/decoding service in src/lib/url-encoder.ts
+- [ ] T024 [P] TMDB API client with caching in src/lib/tmdb.ts
+- [ ] T025 [P] URL encoding/decoding service in src/lib/url-encoder.ts
 
 ## Phase 3.5: API Endpoints (Sequential - shared route files)
-- [ ] T020 GET /api/movies/search route in src/app/api/movies/search/route.ts
-- [ ] T021 GET /api/movies/[id] route in src/app/api/movies/[id]/route.ts
-- [ ] T022 GET /api/genres route for genre filtering in src/app/api/genres/route.ts
+- [ ] T026 GET /api/movies/search route in src/app/api/movies/search/route.ts
+- [ ] T027 GET /api/movies/[id] route in src/app/api/movies/[id]/route.ts
+- [ ] T028 GET /api/genres route for genre filtering in src/app/api/genres/route.ts
 
 ## Phase 3.6: UI Components - Atoms
-- [ ] T023 [P] Button component with variants in src/components/atoms/Button.tsx
-- [ ] T024 [P] Input component with validation in src/components/atoms/Input.tsx
-- [ ] T025 [P] Badge component for genres in src/components/atoms/Badge.tsx
-- [ ] T026 [P] ThemeToggle component in src/components/atoms/ThemeToggle.tsx
+- [ ] T029 [P] Button component with variants in src/components/atoms/Button.tsx
+- [ ] T030 [P] Input component with validation in src/components/atoms/Input.tsx
+- [ ] T031 [P] Badge component for genres in src/components/atoms/Badge.tsx
+- [ ] T032 [P] ThemeToggle component in src/components/atoms/ThemeToggle.tsx
 
 ## Phase 3.7: UI Components - Molecules
-- [ ] T027 [P] SearchBox component in src/features/movie-search/components/SearchBox.tsx
-- [ ] T028 [P] MovieCard component in src/features/movie-search/components/MovieCard.tsx
-- [ ] T029 [P] CountdownTimer component in src/features/watch-party/components/CountdownTimer.tsx
-- [ ] T030 [P] DateTimePicker component in src/features/watch-party/components/DateTimePicker.tsx
-- [ ] T031 [P] GenreFilter component in src/features/movie-search/components/GenreFilter.tsx
+- [ ] T033 [P] SearchBox component in src/features/movie-search/components/SearchBox.tsx
+- [ ] T034 [P] MovieCard component in src/features/movie-search/components/MovieCard.tsx
+- [ ] T035 [P] CountdownTimer component in src/features/watch-party/components/CountdownTimer.tsx
+- [ ] T036 [P] DateTimePicker component in src/features/watch-party/components/DateTimePicker.tsx
+- [ ] T037 [P] GenreFilter component in src/features/movie-search/components/GenreFilter.tsx
 
 ## Phase 3.8: UI Components - Organisms & Pages
-- [ ] T032 MovieGrid organism in src/features/movie-search/components/MovieGrid.tsx
-- [ ] T033 Home page with search and grid in src/app/page.tsx
-- [ ] T034 Movie details page in src/app/movies/[id]/page.tsx
-- [ ] T035 Watch party page in src/app/watch-party/[id]/page.tsx
+- [ ] T038 MovieGrid organism in src/features/movie-search/components/MovieGrid.tsx
+- [ ] T039 Home page with search and grid in src/app/page.tsx
+- [ ] T040 Movie details page in src/app/movies/[id]/page.tsx
+- [ ] T041 Watch party page in src/app/watch-party/[id]/page.tsx
 
 ## Phase 3.9: Integration & Polish
-- [ ] T036 [P] Theme provider setup in src/app/providers/theme-provider.tsx
-- [ ] T037 [P] Global styles and CSS variables in src/app/globals.css
-- [ ] T038 [P] Error boundaries and loading states for external API failures in src/components/error-boundary.tsx
-- [ ] T039 [P] Performance optimization: Image optimization and lazy loading
-- [ ] T040 [P] Unit tests for utility functions in tests/unit/
-- [ ] T041 [P] Storybook stories for all components
-- [ ] T042 Execute quickstart.md user journey validation
-- [ ] T043 [P] Performance testing: <2 second search response time
-- [ ] T044 [P] Update README.md with setup and deployment instructions
+- [ ] T042 [P] Theme provider setup in src/app/providers/theme-provider.tsx
+- [ ] T043 [P] Global styles and CSS variables in src/app/globals.css
+- [ ] T044 [P] Error boundaries and loading states for external API failures in src/components/error-boundary.tsx
+- [ ] T045 [P] Performance optimization: Image optimization and lazy loading
+- [ ] T046 [P] Unit tests for utility functions in tests/unit/
+- [ ] T047 [P] Storybook stories for all components
+- [ ] T048 Execute quickstart.md user journey validation with Playwright
+- [ ] T049 [P] Performance testing with Playwright: <2 second search response time
+- [ ] T050 [P] Cross-browser testing: Chrome, Firefox, Safari with Playwright
+- [ ] T051 [P] Accessibility testing with Playwright and axe-core
+- [ ] T052 [P] Visual regression testing with Playwright screenshots
+- [ ] T053 [P] Mobile responsiveness testing with Playwright viewports
+- [ ] T054 [P] Update README.md with Playwright setup and debugging instructions
+- [ ] T055 [P] Create Playwright CI/CD pipeline configuration
 
 ## Dependencies
-- Setup (T001-T005) before everything
-- Tests (T006-T012) before implementation (T013+)
-- Data models (T013-T017) before services (T018-T019)
-- Services (T018-T019) before API routes (T020-T022)
-- Atoms (T023-T026) before molecules (T027-T031)
-- Molecules (T027-T031) before organisms/pages (T032-T035)
-- Core implementation before integration/polish (T036-T044)
-- T032 (MovieGrid) depends on T028 (MovieCard) and T031 (GenreFilter)
-- T033-T035 (Pages) depend on completed components from previous phases
+- Setup (T001-T006) before everything
+- Contract Tests (T007-T009) before API Implementation (T026-T028)
+- E2E Tests + Step Definitions (T010-T017) before Page Implementation (T039-T041)
+- Unit Tests (T018) before Utility Implementation (T025)
+- Data models (T019-T023) before services (T024-T025)
+- Services (T024-T025) before API routes (T026-T028)
+- Atoms (T029-T032) before molecules (T033-T037)
+- Molecules (T033-T037) before organisms/pages (T038-T041)
+- Core implementation before integration/polish (T042-T055)
+- T038 (MovieGrid) depends on T034 (MovieCard) and T037 (GenreFilter)
+- T039-T041 (Pages) depend on completed components from previous phases
+- Playwright testing tasks (T048-T053) depend on UI implementation
 
 ## Parallel Execution Examples
 
-### Phase 3.2: Launch all contract tests together
+### Phase 3.2: All Tests + Playwright Setup
 ```bash
-# All contract tests can run in parallel (different files)
+# Contract tests, Cucumber features, and Playwright step definitions can run in parallel
 Task: "Contract test GET /api/movies/search in tests/contract/movie-search-api.test.ts"
 Task: "Contract test GET /api/movies/[id] in tests/contract/movie-details-api.test.ts"
 Task: "Contract test GET /api/genres in tests/contract/genres-api.test.ts"
+Task: "Cucumber feature: Movie discovery flow in tests/integration/movie-discovery.feature"
+Task: "Cucumber feature: Watch party creation in tests/integration/watch-party-flow.feature"
+Task: "Cucumber feature: Countdown timer behavior in tests/integration/countdown-timer.feature"
+Task: "Movie discovery steps in tests/step-definitions/movie-discovery.steps.ts"
+Task: "Watch party flow steps in tests/step-definitions/watch-party-flow.steps.ts"
+Task: "Countdown timer steps in tests/step-definitions/countdown-timer.steps.ts"
+Task: "Playwright World setup in tests/step-definitions/support/world.ts"
+Task: "Cucumber hooks with Playwright in tests/step-definitions/support/hooks.ts"
 Task: "Unit test: URL encoding/decoding for watch party data in tests/unit/url-encoder.test.ts"
 ```
 
-### Phase 3.3: Launch all data models together
+### Phase 3.3: All Data Models Together
 ```bash
 # All data models can run in parallel (different files)
 Task: "Movie interface and Zod schema in src/types/movie.ts"
@@ -129,7 +160,7 @@ Task: "WatchParty interface and Zod schema in src/types/watch-party.ts"
 Task: "ShareableURLData interface and Zod schema in src/types/shareable-url.ts"
 ```
 
-### Phase 3.6: Launch all atoms together
+### Phase 3.6: All Atoms Together
 ```bash
 # All atom components can run in parallel (different files)
 Task: "Button component with variants in src/components/atoms/Button.tsx"
@@ -138,26 +169,60 @@ Task: "Badge component for genres in src/components/atoms/Badge.tsx"
 Task: "ThemeToggle component in src/components/atoms/ThemeToggle.tsx"
 ```
 
+### Phase 3.9: Playwright Testing Suite
+```bash
+# All Playwright testing tasks can run in parallel (different test suites)
+Task: "Performance testing with Playwright: <2 second search response time"
+Task: "Cross-browser testing: Chrome, Firefox, Safari with Playwright"
+Task: "Accessibility testing with Playwright and axe-core"
+Task: "Visual regression testing with Playwright screenshots"
+Task: "Mobile responsiveness testing with Playwright viewports"
+```
+
 ## Critical Rules
-- **TDD**: All tests (T006-T012) MUST be written and MUST FAIL before implementation
+- **TDD**: All tests (T007-T018) MUST be written and MUST FAIL before implementation
 - **Constitution**: Each component needs unit tests AND Storybook stories
 - **Folder-by-feature**: Group related files in feature directories
 - **Atomic Design**: Follow atoms → molecules → organisms → templates hierarchy
-- **Performance**: Search must complete within 2 seconds (requirement from quickstart.md)
+- **Performance**: Search must complete within 2 seconds (tested with Playwright)
 - **Error Handling**: External API failures must be handled gracefully with user-friendly messages
+- **Cross-browser**: Playwright tests must pass on Chrome, Firefox, and Safari
+- **Accessibility**: All components must pass axe-core accessibility tests via Playwright
+- **Visual Consistency**: Playwright visual regression tests prevent UI breakage
+
+## Playwright-Specific Notes
+- **Browser Setup**: T003 configures Chromium, Firefox, Safari for cross-browser testing
+- **Step Definitions**: T013-T017 create reusable page interactions for Cucumber scenarios
+- **World Setup**: T016 configures shared browser context across Cucumber steps
+- **Hooks**: T017 handles browser lifecycle, screenshot capture on failures
+- **Debugging**: Use `npx playwright codegen localhost:3000` to record new interactions
+- **CI/CD**: T055 sets up headless mode for automated testing, headed for development
+- **Visual Testing**: T052 captures screenshots for regression testing
+- **Performance**: T049 measures actual page load and interaction times
+- **Mobile Testing**: T053 tests responsive design on various device viewports
 
 ## Validation Checklist
-- [ ] All 5 API contracts have corresponding test files
-- [ ] All 5 data entities have TypeScript interfaces and Zod schemas
-- [ ] All 5 API endpoints are implemented
-- [ ] Movie search, details, genre filtering, and watch party user flows are covered
-- [ ] Dark/light theme system is complete
-- [ ] Performance requirements are met
-- [ ] All components have unit tests and Storybook stories
+- [ ] All 3 API contracts have corresponding test files (T007-T009)
+- [ ] All 5 data entities have TypeScript interfaces and Zod schemas (T019-T023)
+- [ ] All 3 API endpoints are implemented (T026-T028)
+- [ ] Movie search, details, genre filtering, and watch party user flows are covered in Cucumber features
+- [ ] Playwright step definitions cover all user interactions (T013-T017)
+- [ ] Dark/light theme system is complete and tested across browsers
+- [ ] Performance requirements are met and verified with Playwright (T049)
+- [ ] All components have unit tests, Storybook stories, and Playwright E2E coverage
+- [ ] Cross-browser compatibility verified on Chrome, Firefox, Safari (T050)
+- [ ] Accessibility standards met and tested with axe-core + Playwright (T051)
+- [ ] Visual regression suite prevents UI breakage (T052)
 
 ## Notes
 - Contract tests verify API request/response formats match specifications
-- Integration tests cover complete user journeys from quickstart.md
+- Cucumber features with Playwright cover complete user journeys from quickstart.md
 - Sequential API route tasks prevent file conflicts in shared directories
 - [P] tasks can be executed simultaneously for faster development
+- Playwright provides superior debugging tools compared to Selenium alternatives
+- Browser automation enables realistic user interaction testing
 - Commit after each completed task for granular progress tracking
+- Use `npx playwright show-report` to view detailed test results and traces
+
+---
+*Ready for execution - 55 numbered tasks with comprehensive Playwright E2E automation*
