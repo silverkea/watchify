@@ -38,73 +38,73 @@
 - **Atomic Design**: `src/components/atoms/`, `molecules/`, `organisms/`
 
 ## Phase 3.1: Setup
-- [ ] T001 Create Next.js project structure with TypeScript and folder-by-feature organization: src/app/, src/components/atoms|molecules|organisms/, src/features/movie-search|watch-party/, src/lib/, src/types/, tests/contract|integration|step-definitions/
-- [ ] T002 Install and configure dependencies: Tailwind CSS, ShadCN/UI, Zod, date-fns, Playwright, Cucumber
-- [ ] T003 [P] Configure Playwright browsers and Cucumber integration in playwright.config.ts and cucumber.js
-- [ ] T004 [P] Configure ESLint, Prettier, and Jest testing environment
-- [ ] T005 [P] Setup environment variables and .env.local template with TMDB API configuration
-- [ ] T006 [P] Configure Tailwind CSS with dark/light theme support and neon color palette
+- [x] T001 Create Next.js project structure with TypeScript and folder-by-feature organization: src/app/, src/components/atoms|molecules|organisms/, src/features/movie-search|watch-party/, src/lib/, src/types/, tests/contract|integration|step-definitions/
+- [x] T002 Install and configure dependencies: Tailwind CSS, ShadCN/UI, Zod, date-fns, Playwright, Cucumber
+- [x] T003 [P] Configure Playwright browsers and Cucumber integration in playwright.config.ts and cucumber.js
+- [x] T004 [P] Configure ESLint, Prettier, and Jest testing environment
+- [x] T005 [P] Setup environment variables and .env.local template with TMDB API configuration
+- [x] T006 [P] Configure Tailwind CSS with dark/light theme support and neon color palette
 
 ## Phase 3.2: Tests First (TDD) ⚠️ MUST COMPLETE BEFORE 3.3
 **CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation**
 
 ### Contract Tests (API Endpoints)
-- [ ] T007 [P] Contract test GET /api/movies/search in tests/contract/movie-search-api.test.ts
-- [ ] T008 [P] Contract test GET /api/movies/[id] in tests/contract/movie-details-api.test.ts
-- [ ] T009 [P] Contract test GET /api/genres in tests/contract/genres-api.test.ts
+- [x] T007 [P] Contract test GET /api/movies/search in tests/contract/movie-search-api.test.ts
+- [x] T008 [P] Contract test GET /api/movies/[id] in tests/contract/movie-details-api.test.ts
+- [x] T009 [P] Contract test GET /api/genres in tests/contract/genres-api.test.ts
 
 ### E2E Tests (Cucumber + Playwright)  
-- [ ] T010 [P] Cucumber feature: Movie discovery flow in tests/integration/movie-discovery.feature
-- [ ] T011 [P] Cucumber feature: Watch party creation in tests/integration/watch-party-flow.feature
-- [ ] T012 [P] Cucumber feature: Countdown timer behavior in tests/integration/countdown-timer.feature
+- [x] T010 [P] Cucumber feature: Movie discovery flow in tests/integration/movie-discovery.feature
+- [x] T011 [P] Cucumber feature: Watch party creation in tests/integration/watch-party-flow.feature
+- [x] T012 [P] Cucumber feature: Countdown timer behavior in tests/integration/countdown-timer.feature
 
 ### Playwright Step Definitions
-- [ ] T013 [P] Movie discovery steps in tests/step-definitions/movie-discovery.steps.ts
-- [ ] T014 [P] Watch party flow steps in tests/step-definitions/watch-party-flow.steps.ts
-- [ ] T015 [P] Countdown timer steps in tests/step-definitions/countdown-timer.steps.ts
-- [ ] T016 [P] Playwright World setup in tests/step-definitions/support/world.ts
-- [ ] T017 [P] Cucumber hooks with Playwright in tests/step-definitions/support/hooks.ts
-- [ ] T018 [P] Unit test: URL encoding/decoding for watch party data in tests/unit/url-encoder.test.ts
+- [x] T013 [P] Movie discovery steps in tests/step-definitions/movie-discovery.steps.ts
+- [x] T014 [P] Watch party flow steps in tests/step-definitions/watch-party-flow.steps.ts
+- [x] T015 [P] Countdown timer steps in tests/step-definitions/countdown-timer.steps.ts
+- [x] T016 [P] Playwright World setup in tests/step-definitions/support/world.ts
+- [x] T017 [P] Cucumber hooks with Playwright in tests/step-definitions/support/hooks.ts
+- [x] T018 [P] Unit test: URL encoding/decoding for watch party data in tests/unit/url-encoder.test.ts
 
 ## Phase 3.3: Data Models (ONLY after tests are failing)
-- [ ] T019 [P] Movie interface and Zod schema in src/types/movie.ts
-- [ ] T020 [P] Genre interface and Zod schema in src/types/genre.ts
-- [ ] T021 [P] CastMember interface and Zod schema in src/types/cast.ts
-- [ ] T022 [P] WatchParty interface and Zod schema in src/types/watch-party.ts
-- [ ] T023 [P] ShareableURLData interface and Zod schema in src/types/shareable-url.ts
+- [x] T019 [P] Movie interface and Zod schema in src/types/movie.ts
+- [x] T020 [P] Genre interface and Zod schema in src/types/genre.ts
+- [x] T021 [P] CastMember interface and Zod schema in src/types/cast.ts
+- [x] T022 [P] WatchParty interface and Zod schema in src/types/watch-party.ts
+- [x] T023 [P] ShareableURLData interface and Zod schema in src/types/shareable-url.ts
 
 ## Phase 3.4: External Services
-- [ ] T024 [P] TMDB API client with caching in src/lib/tmdb.ts
-- [ ] T025 [P] URL encoding/decoding service in src/lib/url-encoder.ts
+- [x] T024 [P] TMDB API client with caching in src/lib/tmdb.ts
+- [x] T025 [P] URL encoding/decoding service in src/lib/url-encoder.ts
 
 ## Phase 3.5: API Endpoints (Sequential - shared route files)
-- [ ] T026 GET /api/movies/search route in src/app/api/movies/search/route.ts
-- [ ] T027 GET /api/movies/[id] route in src/app/api/movies/[id]/route.ts
-- [ ] T028 GET /api/genres route for genre filtering in src/app/api/genres/route.ts
+- [x] T026 GET /api/movies/search route in src/app/api/movies/search/route.ts
+- [x] T027 GET /api/movies/[id] route in src/app/api/movies/[id]/route.ts
+- [x] T028 GET /api/genres route for genre filtering in src/app/api/genres/route.ts
 
 ## Phase 3.6: UI Components - Atoms
-- [ ] T029 [P] Button component with variants in src/components/atoms/Button.tsx
-- [ ] T030 [P] Input component with validation in src/components/atoms/Input.tsx
-- [ ] T031 [P] Badge component for genres in src/components/atoms/Badge.tsx
-- [ ] T032 [P] ThemeToggle component in src/components/atoms/ThemeToggle.tsx
+- [x] T029 [P] Button component with variants in src/components/atoms/Button.tsx
+- [x] T030 [P] Input component with validation in src/components/atoms/Input.tsx
+- [x] T031 [P] Badge component for genres in src/components/atoms/Badge.tsx
+- [x] T032 [P] ThemeToggle component in src/components/atoms/ThemeToggle.tsx
 
 ## Phase 3.7: UI Components - Molecules
-- [ ] T033 [P] SearchBox component in src/features/movie-search/components/SearchBox.tsx
-- [ ] T034 [P] MovieCard component in src/features/movie-search/components/MovieCard.tsx
-- [ ] T035 [P] CountdownTimer component in src/features/watch-party/components/CountdownTimer.tsx
-- [ ] T036 [P] DateTimePicker component in src/features/watch-party/components/DateTimePicker.tsx
-- [ ] T037 [P] GenreFilter component in src/features/movie-search/components/GenreFilter.tsx
+- [x] T033 [P] SearchBox component in src/features/movie-search/components/SearchBox.tsx
+- [x] T034 [P] MovieCard component in src/features/movie-search/components/MovieCard.tsx
+- [x] T035 [P] CountdownTimer component in src/features/watch-party/components/CountdownTimer.tsx
+- [x] T036 [P] DateTimePicker component in src/features/watch-party/components/DateTimePicker.tsx
+- [x] T037 [P] GenreFilter component in src/features/movie-search/components/GenreFilter.tsx
 
 ## Phase 3.8: UI Components - Organisms & Pages
-- [ ] T038 MovieGrid organism in src/features/movie-search/components/MovieGrid.tsx
-- [ ] T039 Home page with search and grid in src/app/page.tsx
-- [ ] T040 Movie details page in src/app/movies/[id]/page.tsx
-- [ ] T041 Watch party page in src/app/watch-party/[id]/page.tsx
+- [x] T038 MovieGrid organism in src/features/movie-search/components/MovieGrid.tsx
+- [x] T039 Home page with search and grid in src/app/page.tsx
+- [x] T040 Movie details page in src/app/movies/[id]/page.tsx
+- [x] T041 Watch party page in src/app/watch-party/[id]/page.tsx
 
 ## Phase 3.9: Integration & Polish
-- [ ] T042 [P] Theme provider setup in src/app/providers/theme-provider.tsx
-- [ ] T043 [P] Global styles and CSS variables in src/app/globals.css
-- [ ] T044 [P] Error boundaries and loading states for external API failures in src/components/error-boundary.tsx
+- [x] T042 [P] Theme provider setup in src/app/providers/theme-provider.tsx
+- [x] T043 [P] Global styles and CSS variables in src/app/globals.css
+- [x] T044 [P] Error boundaries and loading states for external API failures in src/components/error-boundary.tsx
 - [ ] T045 [P] Performance optimization: Image optimization and lazy loading
 - [ ] T046 [P] Unit tests for utility functions in tests/unit/
 - [ ] T047 [P] Storybook stories for all components

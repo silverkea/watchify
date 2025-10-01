@@ -1,0 +1,416 @@
+/**
+ * Watch Party Page
+ * Displays watch party details with countdown timer and sharing functionality
+ */
+
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { 
+  Clock, 
+  Users, 
+  Share2, 
+  Calendar,
+  Play,
+  Copy,
+  CheckCircle,
+  AlertCircle,
+  ArrowLeft,
+  ExternalLink
+} from 'lucide-react';
+import { Button } from '@/components/atoms/Button';
+import { Badge } from '@/components/atoms/Badge';
+import { CountdownTimer } from '@/features/watch-party/components/CountdownTimer';
+import { Movie, WatchParty } from '@/types';
+import { cn } from '@/lib/utils';
+import { format, isAfter, isBefore, addMinutes } from 'date-fns';
+
+interface WatchPartyPageProps {
+  params: {
+    id: string;
+  };
+}
+
+interface WatchPartyData {
+  movieId: number;
+  scheduledTime: string;
+  movieTitle: string;
+  moviePoster: string | null;
+}
+
+export default function WatchPartyPage({ params }: WatchPartyPageProps) {
+  const [watchPartyData, setWatchPartyData] = useState<WatchPartyData | null>(null);
+  const [movie, setMovie] = useState<Movie | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [participants] = useState(1); // Mock participant count
+  
+  const router = useRouter();
+
+  useEffect(() => {
+    loadWatchPartyData();
+  }, [params.id]);
+
+  const loadWatchPartyData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Decode the watch party data from URL
+      try {
+        const decodedData = JSON.parse(atob(params.id));
+        setWatchPartyData(decodedData);
+
+        // Load full movie details
+        if (decodedData.movieId) {
+          await loadMovieDetails(decodedData.movieId);
+        }
+      } catch (decodeError) {
+        setError('Invalid watch party link');
+        return;
+      }
+    } catch (err) {
+      setError('Failed to load watch party details');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadMovieDetails = async (movieId: number) => {
+    try {
+      const response = await fetch(`/api/movies/${movieId}`);
+      if (response.ok) {
+        const movieData = await response.json();
+        setMovie(movieData);
+      }
+    } catch (err) {
+      console.error('Failed to load movie details:', err);
+    }
+  };
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy link:', err);
+    }
+  };
+
+  const handleShare = async () => {
+    if (!watchPartyData) return;
+
+    try {
+      await navigator.share({
+        title: `Watch Party: ${watchPartyData.movieTitle}`,
+        text: `Join me for a watch party of ${watchPartyData.movieTitle}!`,
+        url: window.location.href
+      });
+    } catch (err) {
+      // Fallback to copy
+      handleCopyLink();
+    }
+  };
+
+  const handleTimeUp = () => {
+    // Handle when countdown reaches zero
+    console.log('Watch party started!');
+  };
+
+  const getWatchPartyStatus = () => {
+    if (!watchPartyData) return 'unknown';
+    
+    const now = new Date();
+    const startTime = new Date(watchPartyData.scheduledTime);
+    const endTime = addMinutes(startTime, movie?.runtime || 120);
+    
+    if (isBefore(now, startTime)) return 'scheduled';
+    if (isAfter(now, startTime) && isBefore(now, endTime)) return 'live';
+    return 'completed';
+  };
+
+  const status = getWatchPartyStatus();
+
+  // Loading state
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-8">
+          <div className="animate-pulse space-y-8">
+            <div className="h-8 w-32 bg-muted rounded" />
+            <div className="max-w-2xl mx-auto space-y-6">
+              <div className="h-64 bg-muted rounded-lg" />
+              <div className="space-y-4">
+                <div className="h-8 bg-muted rounded w-3/4" />
+                <div className="h-4 bg-muted rounded w-1/2" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // Error state
+  if (error || !watchPartyData) {
+    return (
+      <main className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-8">
+          <Button
+            variant="ghost"
+            onClick={() => router.push('/')}
+            className="mb-6"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Home
+          </Button>
+          
+          <div className="flex flex-col items-center justify-center py-16">
+            <AlertCircle className="w-16 h-16 text-red-500 mb-4" />
+            <h1 className="text-2xl font-bold text-foreground mb-2">
+              Watch Party Not Found
+            </h1>
+            <p className="text-muted-foreground text-center max-w-md mb-6">
+              {error || "The watch party you're looking for doesn't exist or the link is invalid."}
+            </p>
+            <Button variant="primary" onClick={() => router.push('/')}>
+              Go Home
+            </Button>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  const posterUrl = watchPartyData.moviePoster 
+    ? `https://image.tmdb.org/t/p/w500${watchPartyData.moviePoster}`
+    : '/images/poster-placeholder.png';
+
+  const scheduledDate = new Date(watchPartyData.scheduledTime);
+
+  return (
+    <main className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        {/* Back Button */}
+        <Button
+          variant="ghost"
+          onClick={() => router.push('/')}
+          className="mb-6"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Home
+        </Button>
+
+        {/* Watch Party Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+            Watch Party
+          </h1>
+          <div className="flex items-center justify-center space-x-2">
+            <Badge 
+              variant={
+                status === 'live' ? 'success' : 
+                status === 'scheduled' ? 'primary' : 
+                'secondary'
+              }
+            >
+              {status === 'live' && <Play className="w-3 h-3 mr-1" />}
+              {status === 'scheduled' && <Calendar className="w-3 h-3 mr-1" />}
+              {status === 'completed' && <CheckCircle className="w-3 h-3 mr-1" />}
+              {status.charAt(0).toUpperCase() + status.slice(1)}
+            </Badge>
+            <Badge variant="secondary">
+              <Users className="w-3 h-3 mr-1" />
+              {participants} participant{participants === 1 ? '' : 's'}
+            </Badge>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Movie Info */}
+          <div className="space-y-6">
+            <div className="relative aspect-[2/3] rounded-lg overflow-hidden shadow-xl">
+              <Image
+                src={posterUrl}
+                alt={`${watchPartyData.movieTitle} poster`}
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <h2 className="text-xl font-semibold text-foreground mb-1">
+                  {watchPartyData.movieTitle}
+                </h2>
+                {movie && (
+                  <div className="text-sm text-muted-foreground space-y-1">
+                    {movie.releaseDate && (
+                      <div>{new Date(movie.releaseDate).getFullYear()}</div>
+                    )}
+                    {movie.runtime && (
+                      <div className="flex items-center">
+                        <Clock className="w-3 h-3 mr-1" />
+                        {Math.floor(movie.runtime / 60)}h {movie.runtime % 60}m
+                      </div>
+                    )}
+                    {movie.voteAverage > 0 && (
+                      <div className="flex items-center">
+                        <span className="text-yellow-500">★</span>
+                        <span className="ml-1">{movie.voteAverage.toFixed(1)}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {movie?.genres && movie.genres.length > 0 && (
+                <div className="flex flex-wrap gap-1">
+                  {movie.genres.slice(0, 3).map((genre) => (
+                    <Badge key={genre.id} variant="secondary" size="sm">
+                      {genre.name}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Countdown and Details */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Countdown Timer */}
+            <div className="text-center">
+              {status === 'scheduled' ? (
+                <CountdownTimer
+                  targetDate={scheduledDate}
+                  onTimeUp={handleTimeUp}
+                  variant="neon"
+                  className="mx-auto"
+                />
+              ) : status === 'live' ? (
+                <div className="p-8 rounded-lg bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-500/50">
+                  <Play className="w-16 h-16 text-green-500 mx-auto mb-4" />
+                  <h3 className="text-2xl font-bold text-green-500 mb-2">
+                    Watch Party is Live!
+                  </h3>
+                  <p className="text-green-400">
+                    The movie started {format(scheduledDate, 'h:mm a')}
+                  </p>
+                </div>
+              ) : (
+                <div className="p-8 rounded-lg bg-gradient-to-br from-gray-500/20 to-slate-500/20 border border-gray-500/50">
+                  <CheckCircle className="w-16 h-16 text-gray-500 mx-auto mb-4" />
+                  <h3 className="text-2xl font-bold text-gray-500 mb-2">
+                    Watch Party Completed
+                  </h3>
+                  <p className="text-gray-400">
+                    This watch party ended at {format(addMinutes(scheduledDate, movie?.runtime || 120), 'h:mm a')}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Schedule Details */}
+            <div className="bg-card rounded-lg border p-6 space-y-4">
+              <h3 className="text-lg font-semibold text-foreground flex items-center">
+                <Calendar className="w-5 h-5 mr-2" />
+                Schedule Details
+              </h3>
+              
+              <div className="space-y-3 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Date:</span>
+                  <span className="text-foreground font-medium">
+                    {format(scheduledDate, 'EEEE, MMMM d, yyyy')}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Start Time:</span>
+                  <span className="text-foreground font-medium">
+                    {format(scheduledDate, 'h:mm a')}
+                  </span>
+                </div>
+                {movie?.runtime && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Estimated End:</span>
+                    <span className="text-foreground font-medium">
+                      {format(addMinutes(scheduledDate, movie.runtime), 'h:mm a')}
+                    </span>
+                  </div>
+                )}
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Time Zone:</span>
+                  <span className="text-foreground font-medium">
+                    {Intl.DateTimeFormat().resolvedOptions().timeZone}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Movie Overview */}
+            {movie?.overview && (
+              <div className="bg-card rounded-lg border p-6">
+                <h3 className="text-lg font-semibold text-foreground mb-3">
+                  About the Movie
+                </h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  {movie.overview}
+                </p>
+              </div>
+            )}
+
+            {/* Sharing Section */}
+            <div className="bg-card rounded-lg border p-6 space-y-4">
+              <h3 className="text-lg font-semibold text-foreground flex items-center">
+                <Share2 className="w-5 h-5 mr-2" />
+                Invite Friends
+              </h3>
+              
+              <p className="text-sm text-muted-foreground">
+                Share this link with friends to invite them to your watch party
+              </p>
+              
+              <div className="flex space-x-2">
+                <Button
+                  variant="primary"
+                  onClick={handleShare}
+                  className="flex-1"
+                >
+                  <Share2 className="w-4 h-4 mr-2" />
+                  Share Party
+                </Button>
+                
+                <Button
+                  variant="ghost"
+                  onClick={handleCopyLink}
+                  className={cn(
+                    "transition-all duration-200",
+                    copied && "text-green-600 border-green-600"
+                  )}
+                >
+                  {copied ? (
+                    <CheckCircle className="w-4 h-4" />
+                  ) : (
+                    <Copy className="w-4 h-4" />
+                  )}
+                </Button>
+              </div>
+              
+              {copied && (
+                <p className="text-xs text-green-600 text-center">
+                  Link copied to clipboard!
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
