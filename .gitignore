@@ -40,6 +40,11 @@ coverage/
 .nyc_output/
 reports/
 
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+
 # Storybook
 storybook-static/
 
