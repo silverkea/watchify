@@ -34,3 +34,17 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Testing
+coverage/
+.nyc_output/
+reports/
+
+# Storybook
+storybook-static/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
