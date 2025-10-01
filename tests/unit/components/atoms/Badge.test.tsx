@@ -79,7 +79,7 @@ describe('Badge Atom', () => {
       const handleRemove = jest.fn();
       render(<Badge removable onRemove={handleRemove}>Remove me</Badge>);
       
-      const removeButton = screen.getByRole('button', { name: /remove/i });
+      const removeButton = screen.getByLabelText('Remove Remove me');
       fireEvent.click(removeButton);
       
       expect(handleRemove).toHaveBeenCalledTimes(1);
@@ -115,7 +115,7 @@ describe('Badge Atom', () => {
       const handleRemove = jest.fn();
       render(<Badge removable onRemove={handleRemove}>Keyboard</Badge>);
       
-      const removeButton = screen.getByRole('button', { name: /remove/i });
+      const removeButton = screen.getByLabelText('Remove Keyboard');
       
       // Focus the remove button
       removeButton.focus();

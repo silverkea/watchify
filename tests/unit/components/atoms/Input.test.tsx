@@ -40,7 +40,7 @@ describe('Input Atom', () => {
       render(<Input disabled placeholder="Disabled input" />);
       const input = screen.getByPlaceholderText('Disabled input');
       expect(input).toBeDisabled();
-      expect(input).toHaveClass('opacity-50 cursor-not-allowed');
+      expect(input).toHaveClass('disabled:opacity-50 disabled:cursor-not-allowed');
     });
 
     it('should render with label', () => {

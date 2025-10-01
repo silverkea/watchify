@@ -57,11 +57,12 @@ const ThemeToggle = React.forwardRef<HTMLButtonElement, ThemeToggleProps>(
     };
 
     const getAriaLabel = (themeValue: Theme): string => {
-      switch (themeValue) {
-        case 'light': return 'Switch to dark theme';
-        case 'dark': return 'Switch to light theme';
-        case 'system': return 'Switch theme';
-        default: return 'Toggle theme';
+      const nextTheme = getNextTheme(themeValue);
+      switch (nextTheme) {
+        case 'light': return 'Switch to light theme';
+        case 'dark': return 'Switch to dark theme';
+        case 'system': return 'Switch to system theme';
+        default: return 'Switch theme';
       }
     };
 

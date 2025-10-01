@@ -80,6 +80,14 @@ const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
       onRemove?.();
     };
 
+    const handleRemoveKeyDown = (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        event.stopPropagation();
+        onRemove?.();
+      }
+    };
+
     const badgeContent = typeof children === 'string' ? children : 'Badge';
 
     return (
@@ -107,6 +115,7 @@ const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
             type="button"
             className="ml-1 -mr-0.5 flex-shrink-0 rounded-full p-0.5 hover:bg-black/10 focus:outline-none focus:ring-1 focus:ring-purple-500 dark:hover:bg-white/10"
             onClick={handleRemove}
+            onKeyDown={handleRemoveKeyDown}
             aria-label={`Remove ${badgeContent}`}
           >
             <svg

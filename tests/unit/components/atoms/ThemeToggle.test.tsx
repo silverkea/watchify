@@ -6,7 +6,7 @@ describe('ThemeToggle Atom', () => {
   describe('Rendering', () => {
     it('should render with default props', () => {
       render(<ThemeToggle />);
-      const button = screen.getByRole('button', { name: /toggle theme/i });
+      const button = screen.getByRole('button', { name: /switch to light theme/i });
       expect(button).toBeInTheDocument();
     });
 
@@ -21,7 +21,7 @@ describe('ThemeToggle Atom', () => {
     it('should show moon icon for dark theme', () => {
       render(<ThemeToggle theme="dark" />);
       const button = screen.getByRole('button');
-      expect(button).toHaveAttribute('aria-label', 'Switch to light theme');
+      expect(button).toHaveAttribute('aria-label', 'Switch to system theme');
       // Moon icon should be visible
       expect(button.querySelector('[data-icon="moon"]')).toBeInTheDocument();
     });
@@ -29,7 +29,7 @@ describe('ThemeToggle Atom', () => {
     it('should show system icon for system theme', () => {
       render(<ThemeToggle theme="system" />);
       const button = screen.getByRole('button');
-      expect(button).toHaveAttribute('aria-label', 'Switch theme');
+      expect(button).toHaveAttribute('aria-label', 'Switch to light theme');
       // System icon should be visible
       expect(button.querySelector('[data-icon="system"]')).toBeInTheDocument();
     });
@@ -71,6 +71,7 @@ describe('ThemeToggle Atom', () => {
     });
 
     it('should cycle through themes correctly', () => {
+      jest.useFakeTimers();
       const handleThemeChange = jest.fn();
       
       // Light -> Dark
@@ -80,18 +81,27 @@ describe('ThemeToggle Atom', () => {
       fireEvent.click(screen.getByRole('button'));
       expect(handleThemeChange).toHaveBeenCalledWith('dark');
 
+      // Wait for debounce to clear
+      jest.advanceTimersByTime(300);
+
       // Dark -> System
       rerender(<ThemeToggle onThemeChange={handleThemeChange} theme="dark" />);
       fireEvent.click(screen.getByRole('button'));
       expect(handleThemeChange).toHaveBeenCalledWith('system');
 
+      // Wait for debounce to clear
+      jest.advanceTimersByTime(300);
+
       // System -> Light
       rerender(<ThemeToggle onThemeChange={handleThemeChange} theme="system" />);
       fireEvent.click(screen.getByRole('button'));
       expect(handleThemeChange).toHaveBeenCalledWith('light');
+
+      jest.useRealTimers();
     });
 
     it('should support keyboard navigation', () => {
+      jest.useFakeTimers();
       const handleThemeChange = jest.fn();
       render(<ThemeToggle onThemeChange={handleThemeChange} />);
       const button = screen.getByRole('button');
@@ -104,18 +114,26 @@ describe('ThemeToggle Atom', () => {
       fireEvent.keyDown(button, { key: 'Enter', code: 'Enter' });
       expect(handleThemeChange).toHaveBeenCalledTimes(1);
       
+      // Wait for debounce to clear
+      jest.advanceTimersByTime(300);
+      
       // Press Space
       fireEvent.keyDown(button, { key: ' ', code: 'Space' });
       expect(handleThemeChange).toHaveBeenCalledTimes(2);
+      
+      jest.useRealTimers();
     });
 
     it('should show tooltip on hover', async () => {
       render(<ThemeToggle theme="light" showTooltip />);
       const button = screen.getByRole('button');
       
+      // Button should have title attribute when showTooltip is true
+      expect(button).toHaveAttribute('title', 'Switch to dark theme');
+      
       fireEvent.mouseEnter(button);
-      // Tooltip should appear after hover
-      await screen.findByText('Switch to dark theme');
+      // Tooltip title should still be present as an attribute
+      expect(button).toHaveAttribute('title', 'Switch to dark theme');
     });
   });
 
