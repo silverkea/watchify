@@ -12,12 +12,8 @@ import {
   Calendar, 
   Clock, 
   Star, 
-  Play, 
   Users, 
-  ArrowLeft,
-  Share2,
-  Heart,
-  ExternalLink
+  ArrowLeft
 } from 'lucide-react';
 import { Button } from '@/components/atoms/Button';
 import { Badge } from '@/components/atoms/Badge';
@@ -97,19 +93,6 @@ export default function MovieDetailsPage({ params }: MovieDetailsPageProps) {
 
   const handleBack = () => {
     router.back();
-  };
-
-  const handleShare = async () => {
-    try {
-      await navigator.share({
-        title: movie?.title,
-        text: `Check out ${movie?.title} on Watchify`,
-        url: window.location.href
-      });
-    } catch (err) {
-      // Fallback to clipboard
-      navigator.clipboard.writeText(window.location.href);
-    }
   };
 
   // Loading state
@@ -244,17 +227,6 @@ export default function MovieDetailsPage({ params }: MovieDetailsPageProps) {
                 <Calendar className="w-4 h-4 mr-2" />
                 Schedule Watch Party
               </Button>
-              
-              <div className="grid grid-cols-2 gap-2">
-                <Button variant="ghost" onClick={handleShare}>
-                  <Share2 className="w-4 h-4 mr-2" />
-                  Share
-                </Button>
-                <Button variant="ghost">
-                  <Heart className="w-4 h-4 mr-2" />
-                  Save
-                </Button>
-              </div>
             </div>
           </div>
 
