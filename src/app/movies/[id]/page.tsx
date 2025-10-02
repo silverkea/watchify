@@ -219,19 +219,6 @@ export default function MovieDetailsPage({ params }: MovieDetailsPageProps) {
                 </div>
               )}
             </div>
-            
-            {/* Action Buttons */}
-            <div className="space-y-2">
-              <Button
-                variant="primary"
-                onClick={() => setShowScheduleModal(true)}
-                className="w-full"
-                disabled={isCreatingParty}
-              >
-                <Calendar className="w-4 h-4 mr-2" />
-                Schedule Watch Party
-              </Button>
-            </div>
           </div>
 
           {/* Content */}
@@ -281,6 +268,18 @@ export default function MovieDetailsPage({ params }: MovieDetailsPageProps) {
                   ))}
                 </div>
               )}
+            </div>
+
+            {/* Schedule Watch Party Button */}
+            <div>
+              <Button
+                variant="primary"
+                onClick={() => setShowScheduleModal(true)}
+                disabled={isCreatingParty}
+              >
+                <Calendar className="w-4 h-4 mr-2" />
+                Schedule Watch Party
+              </Button>
             </div>
 
             {/* Overview */}
