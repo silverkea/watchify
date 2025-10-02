@@ -9,7 +9,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { SearchBox } from '@/features/movie-search/components/SearchBox';
 import { MovieGrid } from '@/features/movie-search/components/MovieGrid';
-import { ThemeToggle } from '@/components/atoms/ThemeToggle';
+import { Header } from '@/components/organisms/Header';
 import { Movie, Genre } from '@/types';
 import { Film, Sparkles, TrendingUp } from 'lucide-react';
 
@@ -297,20 +297,7 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Film className="w-8 h-8 text-purple-600" />
-              <h1 className="text-2xl font-bold text-foreground">
-                Watchify
-              </h1>
-            </div>
-            <ThemeToggle />
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       {!searchQuery && isInitialLoad && (

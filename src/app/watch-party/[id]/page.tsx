@@ -12,7 +12,6 @@ import {
   Clock, 
   Copy,
   AlertCircle,
-  ArrowLeft,
   ExternalLink,
   Play,
   CheckCircle,
@@ -22,6 +21,7 @@ import { Button } from '@/components/atoms/Button';
 import { Badge } from '@/components/atoms/Badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CountdownTimer } from '@/features/watch-party/components/CountdownTimer';
+import { Header } from '@/components/organisms/Header';
 import { Movie, WatchParty } from '@/types';
 import { cn } from '@/lib/utils';
 import { format, addMinutes } from 'date-fns';
@@ -151,15 +151,8 @@ export default function WatchPartyPage({ params }: WatchPartyPageProps) {
   if (error || !watchPartyData) {
     return (
       <main className="min-h-screen bg-background">
+        <Header />
         <div className="container mx-auto px-4 py-8">
-          <Button
-            variant="ghost"
-            onClick={() => router.push('/')}
-            className="mb-6"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Home
-          </Button>
           
           <div className="flex flex-col items-center justify-center py-16">
             <AlertCircle className="w-16 h-16 text-red-500 mb-4" />
@@ -186,16 +179,8 @@ export default function WatchPartyPage({ params }: WatchPartyPageProps) {
 
   return (
     <main className="min-h-screen bg-background">
+      <Header />
       <div className="container mx-auto px-4 py-8 max-w-4xl">
-        {/* Back Button */}
-        <Button
-          variant="ghost"
-          onClick={() => router.push('/')}
-          className="mb-6"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Home
-        </Button>
 
         {/* Watch Party Header */}
         <div className="text-center mb-8">
