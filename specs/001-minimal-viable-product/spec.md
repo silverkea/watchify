@@ -27,8 +27,8 @@
 A user wants to discover movies, select one they're interested in, and coordinate a synchronized watch party with friends or family at a specific date and time.
 
 ### Acceptance Scenarios
-1. **Given** the user is on the home page, **When** they search for "action movies", **Then** they see a grid of action movies with posters, titles, release dates, and star ratings
-2. **Given** the user sees the movie grid, **When** they apply a genre filter, **Then** the grid updates to show only movies from that genre
+1. **Given** the user is on the home page, **When** they search for "action movies", **Then** they see a responsive grid of action movies with posters, titles, release dates, and star ratings that adapts to their screen size
+2. **Given** the user sees the movie grid, **When** they apply a genre filter, **Then** the grid updates to show only movies from that genre while maintaining responsive layout
 3. **Given** the user clicks on a movie from the grid, **When** the movie detail page loads, **Then** they see expanded information including synopsis and main actors
 4. **Given** the user is on a movie detail page, **When** they select a date and time for a watch party, **Then** they can create a watch party with those details
 5. **Given** the user has scheduled a watch party, **When** they access the watch party landing page, **Then** they see a countdown timer and all movie details
@@ -50,7 +50,7 @@ A user wants to discover movies, select one they're interested in, and coordinat
 
 ### Functional Requirements
 - **FR-001**: System MUST allow users to search for movies by title or keyword
-- **FR-002**: System MUST display movies in a grid layout with poster image, title, release date, and star rating
+- **FR-002**: System MUST display movies in a responsive grid layout with poster image, title, release date, and star rating that adapts to different screen sizes
 - **FR-003**: System MUST provide genre filtering capability for the movie grid
 - **FR-004**: System MUST display detailed movie information including synopsis and cast members when a movie is selected
 - **FR-005**: System MUST allow users to schedule watch parties using a calendar picker for date selection and dropdown menus for time selection

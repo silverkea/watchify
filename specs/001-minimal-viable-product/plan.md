@@ -44,6 +44,17 @@
 **Constraints**: External API rate limits, Vercel free tier limitations, secure API key management, 2048 character URL limits
 **Scale/Scope**: MVP for small groups, 100 concurrent users max, responsive design for mobile/desktop
 
+## UI/UX Design Specifications
+**Responsive Layout Strategy**: Mobile-first responsive design using Tailwind CSS breakpoints
+**Movie Grid Responsive Breakpoints**:
+- **Mobile (default)**: 2 columns (`grid-cols-2`)
+- **Tablet (md: 768px+)**: 3 columns (`sm:grid-cols-3`) 
+- **Desktop (lg: 1024px+)**: 6 columns (`lg:grid-cols-6`)
+**Grid Implementation**: MovieGrid organism component with configurable `gridCols` prop
+**Responsive Components**: All UI components follow mobile-first design principles with proper scaling
+**Theme Support**: Dark/light mode toggle with system preference detection
+**Accessibility**: WCAG 2.1 AA compliance with proper ARIA labels and keyboard navigation
+
 ## Constitution Check
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
