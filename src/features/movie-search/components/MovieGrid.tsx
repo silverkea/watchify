@@ -85,10 +85,12 @@ export function MovieGrid({
     viewMode === 'grid' ? {
       // Mobile: 2 columns, Tablet: 3 columns, Desktop: 6 columns
       'grid-cols-2 sm:grid-cols-3 lg:grid-cols-6': gridCols.sm === 2 && gridCols.md === 3 && gridCols.lg === 6,
+      // Mobile: 2 columns, Tablet: 3 columns, Desktop: 5 columns
+      'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5': gridCols.sm === 2 && gridCols.md === 3 && gridCols.lg === 5,
       // Fallback for 4 columns on desktop
       'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4': gridCols.sm === 2 && gridCols.md === 3 && gridCols.lg === 4,
       // Default fallback for other configurations
-      'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5': gridCols.sm !== 2 || gridCols.md !== 3 || (gridCols.lg !== 4 && gridCols.lg !== 6)
+      'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5': gridCols.sm !== 2 || gridCols.md !== 3 || (gridCols.lg !== 4 && gridCols.lg !== 6 && gridCols.lg !== 5)
     } : "grid-cols-1 gap-2"
   );
 

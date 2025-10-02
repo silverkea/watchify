@@ -112,6 +112,12 @@
 - [x] T039 Home page with search and grid in src/app/page.tsx
 - [x] T040 Movie details page in src/app/movies/[id]/page.tsx
 - [x] T041 Watch party page in src/app/watch-party/[id]/page.tsx
+- [x] T071 [P] Header component with clickable logo navigation in src/components/organisms/Header/index.tsx
+- [x] T072 [P] Theme-aware countdown timer styling for light/dark mode readability in src/features/watch-party/components/CountdownTimer.tsx
+- [x] T073 [P] Simplified watch party UI without status badges in src/app/watch-party/[id]/page.tsx
+- [x] T074 [P] Enhanced copy link button as full-width primary button in src/app/watch-party/[id]/page.tsx
+- [x] T075 [P] Enhanced page size to 60 items by fetching 3 pages initially in src/app/page.tsx
+- [x] T076 [P] Updated grid layout to 5 columns on desktop in src/features/movie-search/components/MovieGrid.tsx
 - [ ] T064 Enhanced GenreFilter component: Hide when search term is active, show only for popular movies in src/features/movie-search/components/GenreFilter.tsx
 - [ ] T065 Enhanced Home page: Hide genre filters during search, show for popular movies only in src/app/page.tsx
 - [ ] T069 [P] Dynamic page title updates: "Popular Movies", "[Genre] Movies", or "Search Results" in src/app/page.tsx
@@ -148,6 +154,9 @@
 - Core implementation before integration/polish (T042-T055)
 - T038 (MovieGrid) depends on T034 (MovieCard) and T037 (GenreFilter)
 - T039-T041 (Pages) depend on completed components from previous phases
+- T071 (Header) can be implemented in parallel with other organisms
+- T072-T074 (UI enhancements) depend on T035 (CountdownTimer) and T041 (Watch party page)
+- T075-T076 (Display enhancements) depend on T038 (MovieGrid) and T039 (Home page)
 - Playwright testing tasks (T048-T053) depend on UI implementation
 
 ## Parallel Execution Examples

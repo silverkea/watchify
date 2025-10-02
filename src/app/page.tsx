@@ -86,45 +86,76 @@ export default function HomePage() {
       setLoading(true);
       setError(null);
       
-      // Load "Popular" movies as the default homepage content
-      const response = await fetch('/api/movies/popular?page=1');
-      if (response.ok) {
-        const data: SearchResponse = await response.json();
-        setMovies(data.results);
-        setHasMore(data.page < data.totalPages);
-        setCurrentPage(data.page);
+      // Load 3 pages of "Popular" movies to get ~60 items (20 per page)
+      const pages = [1, 2, 3];
+      const responses = await Promise.all(
+        pages.map(page => fetch(`/api/movies/popular?page=${page}`))
+      );
+      
+      // Check if all requests succeeded
+      const allSuccessful = responses.every(response => response.ok);
+      
+      if (allSuccessful) {
+        const dataPromises = responses.map(response => response.json() as Promise<SearchResponse>);
+        const allData = await Promise.all(dataPromises);
+        
+        // Combine all results
+        const combinedMovies = allData.flatMap(data => data.results);
+        setMovies(combinedMovies);
+        
+        // Use the last page's totalPages and set current page to 3
+        const lastData = allData[allData.length - 1];
+        setHasMore(3 < lastData.totalPages);
+        setCurrentPage(3);
         setIsNowPlayingMode(true);
       } else {
         setError('Failed to load popular movies');
       }
     } catch (err) {
-      setError('Failed to load now playing movies');
+      setError('Failed to load popular movies');
     } finally {
       setLoading(false);
       setIsInitialLoad(false);
     }
   };
 
-  const loadMoreNowPlaying = async (page: number) => {
+  const loadMoreNowPlaying = async (startPage: number) => {
     try {
       setLoading(true);
       setError(null);
       
-      const params = new URLSearchParams({
-        page: page.toString()
-      });
+      // Load 3 consecutive pages starting from startPage
+      const pages = [startPage, startPage + 1, startPage + 2];
+      const responses = await Promise.all(
+        pages.map(page => {
+          const params = new URLSearchParams({
+            page: page.toString()
+          });
 
-      // Include genre filters if any are selected
-      if (selectedGenres.length > 0) {
-        params.append('genre', selectedGenres.join(','));
-      }
+          // Include genre filters if any are selected
+          if (selectedGenres.length > 0) {
+            params.append('genre', selectedGenres.join(','));
+          }
+          
+          return fetch(`/api/movies/popular?${params}`);
+        })
+      );
       
-      const response = await fetch(`/api/movies/popular?${params}`);
-      if (response.ok) {
-        const data: SearchResponse = await response.json();
-        setMovies(prev => [...prev, ...data.results]);
-        setHasMore(data.page < data.totalPages);
-        setCurrentPage(page);
+      // Check if all requests succeeded
+      const allSuccessful = responses.every(response => response.ok);
+      
+      if (allSuccessful) {
+        const dataPromises = responses.map(response => response.json() as Promise<SearchResponse>);
+        const allData = await Promise.all(dataPromises);
+        
+        // Combine all results and append to existing movies
+        const combinedMovies = allData.flatMap(data => data.results);
+        setMovies(prev => [...prev, ...combinedMovies]);
+        
+        // Use the last page's data for pagination info
+        const lastData = allData[allData.length - 1];
+        setHasMore(startPage + 2 < lastData.totalPages);
+        setCurrentPage(startPage + 2);
       } else {
         setError('Failed to load more popular movies');
       }
@@ -217,40 +248,56 @@ export default function HomePage() {
     router.push(`/movies/${movie.id}`);
   }, [router]);
 
-  const loadPopularMoviesWithGenres = useCallback(async (genreIds: number[], page: number = 1) => {
+  const loadPopularMoviesWithGenres = useCallback(async (genreIds: number[], startPage: number = 1) => {
     try {
       setLoading(true);
       setError(null);
       setIsNowPlayingMode(true);
 
-      const params = new URLSearchParams({
-        page: page.toString()
-      });
+      // Load 3 consecutive pages for better grid display (60 items)
+      const pages = [startPage, startPage + 1, startPage + 2];
+      const responses = await Promise.all(
+        pages.map(page => {
+          const params = new URLSearchParams({
+            page: page.toString()
+          });
 
-      if (genreIds.length > 0) {
-        params.append('genre', genreIds.join(','));
-      }
+          if (genreIds.length > 0) {
+            params.append('genre', genreIds.join(','));
+          }
 
-      console.log('Loading popular movies with genres:', { genreIds, page });
-      const response = await fetch(`/api/movies/popular?${params}`);
+          return fetch(`/api/movies/popular?${params}`);
+        })
+      );
+
+      console.log('Loading popular movies with genres:', { genreIds, startPage, pages });
       
-      if (response.ok) {
-        const data: SearchResponse = await response.json();
+      // Check if all requests succeeded
+      const allSuccessful = responses.every(response => response.ok);
+      
+      if (allSuccessful) {
+        const dataPromises = responses.map(response => response.json() as Promise<SearchResponse>);
+        const allData = await Promise.all(dataPromises);
+        
         console.log('Popular movies with genres loaded:', { 
-          page: data.page, 
-          totalPages: data.totalPages, 
-          resultsCount: data.results.length,
+          pages: allData.map(d => d.page),
+          totalResults: allData.reduce((sum, d) => sum + d.results.length, 0),
           genreIds
         });
         
-        if (page === 1) {
-          setMovies(data.results);
+        // Combine all results
+        const combinedMovies = allData.flatMap(data => data.results);
+        
+        if (startPage === 1) {
+          setMovies(combinedMovies);
         } else {
-          setMovies(prev => [...prev, ...data.results]);
+          setMovies(prev => [...prev, ...combinedMovies]);
         }
         
-        setHasMore(data.page < data.totalPages);
-        setCurrentPage(page);
+        // Use the last page's data for pagination info
+        const lastData = allData[allData.length - 1];
+        setHasMore(startPage + 2 < lastData.totalPages);
+        setCurrentPage(startPage + 2);
       } else {
         setError('Failed to load popular movies');
       }
@@ -366,7 +413,7 @@ export default function HomePage() {
             onLoadMore={handleLoadMore}
             onGenreToggle={handleGenreToggle}
             onGenresClear={handleGenresClear}
-            gridCols={{ sm: 2, md: 3, lg: 6, xl: 6 }}
+            gridCols={{ sm: 2, md: 3, lg: 5, xl: 5 }}
             className="max-w-7xl mx-auto"
           />
         </div>

@@ -43,6 +43,11 @@ A user wants to discover movies, select one they're interested in, and coordinat
 13. **Given** the user selects one or more genre filters, **When** viewing popular movies without a search term, **Then** the page title changes to display the selected genre name(s) followed by "Movies" (e.g., "Action Movies", "Action, Comedy Movies")
 14. **Given** the user has genre filters applied, **When** they clear all genre filters, **Then** the page title returns to "Popular Movies"
 15. **Given** the user has a search term active, **When** they view search results, **Then** the page title shows "Search Results" and genre filters are not visible
+16. **Given** the user is on any page, **When** they see the header, **Then** they can click the Watchify logo to navigate to the home page
+17. **Given** the user is viewing a watch party page, **When** they use light theme, **Then** the countdown timer displays with high contrast colors for readability
+18. **Given** the user is on a watch party page, **When** they want to copy the link, **Then** they see a prominent full-width "Copy Party Link" button with copy icon
+19. **Given** the user visits the home page, **When** the popular movies load, **Then** they see approximately 60 movies displayed initially for better content discovery
+20. **Given** the user is viewing movies on a desktop screen, **When** the movie grid displays, **Then** movies are arranged in 5 columns for optimal viewing density
 
 ### Edge Cases
 - What happens when no movies match the search criteria?
@@ -59,7 +64,7 @@ A user wants to discover movies, select one they're interested in, and coordinat
 ### Functional Requirements
 - **FR-001**: System MUST display "Popular Movies" as default homepage content when no search is active
 - **FR-002**: System MUST allow users to search for movies by title or keyword
-- **FR-003**: System MUST display movies in a responsive grid layout with poster image, title, release date, and star rating that adapts to different screen sizes
+- **FR-003**: System MUST display movies in a responsive grid layout with poster image, title, release date, and star rating using 2 columns on mobile, 3 columns on tablet, and 5 columns on desktop screens
 - **FR-004**: System MUST provide genre filtering capability for the movie grid when no search term is active
 - **FR-004a**: Genre filters MUST trigger new search requests instead of client-side filtering of current results
 - **FR-004b**: Genre filtering MUST return to page 1 and reset pagination when applied or modified
@@ -88,6 +93,12 @@ A user wants to discover movies, select one they're interested in, and coordinat
 - **FR-018**: System MUST return to "Popular Movies" view when search is cleared
 - **FR-019**: System MUST maintain active genre filters during pagination ("Load More" functionality)
 - **FR-020**: System MUST support genre filtering on popular movies endpoint with server-side filtering
+- **FR-021**: System MUST provide consistent navigation header with clickable logo across all pages
+- **FR-022**: System MUST ensure countdown timer readability in both light and dark themes with appropriate contrast
+- **FR-023**: System MUST provide simplified watch party interface focusing on essential information without status badges
+- **FR-024**: System MUST present copy link functionality as prominent full-width primary action button with copy icon
+- **FR-025**: System MUST display approximately 60 movies initially by fetching multiple pages (3 × 20 items) for enhanced content discovery
+- **FR-026**: System MUST arrange movies in 5 columns on desktop screens while maintaining 2 columns on mobile and 3 columns on tablet for optimal viewing density
 
 ### Non-Functional Requirements
 - **NFR-001**: Movie search results MUST load within 2 seconds with 95% success rate for acceptable user experience
