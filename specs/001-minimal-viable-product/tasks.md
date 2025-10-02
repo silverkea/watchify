@@ -1,6 +1,14 @@
 # Tasks: Movie Watch Party Platform MVP
 
-**Input**: Design documents from `/specs/001-minimal-viable-product/`
+**In## Phase 3.2: Tests First (TDD) ⚠️ MUST COMPLETE BEFORE 3.3
+**CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation**
+
+### Contract Tests (API Testing)
+- [x] T007 [P] Contract test GET /api/movies/search in tests/contract/movie-search-api.test.ts  
+- [x] T008 [P] Contract test GET /api/movies/[id] in tests/contract/movie-details-api.test.ts
+- [x] T009 [P] Contract test GET /api/genres in tests/contract/genres-api.test.ts
+- [ ] T056 [P] Contract test GET /api/movies/popular with genre filtering in tests/contract/popular-movies-api.test.ts
+- [ ] T057 [P] Enhanced contract test for multi-genre filtering on search API in tests/contract/movie-search-api.test.tsDesign documents from `/specs/001-minimal-viable-product/`
 **Prerequisites**: plan.md (required), research.md, data-model.md, contracts/
 
 ## Execution Flow (main)
@@ -11,21 +19,22 @@
    → Structure: Web app with folder-by-feature organization
 2. Load design documents ✓:
    → data-model.md: Movie, Genre, CastMember, WatchParty, ShareableURLData
-   → contracts/: 3 API endpoints (movie-search, movie-details, genres)
+   → contracts/: 4 API endpoints (movie-search, movie-details, genres, popular-movies with genre filtering)
    → research.md: TMDB API, Vercel deployment, Playwright vs alternatives
    → quickstart.md: TDD workflow with Playwright debugging tools
+   → Enhanced genre filtering requirements: Server-side filtering, pagination reset, popular movies support
 3. Generate tasks by category ✓:
    → Setup: Next.js project, Playwright browsers, dependencies
-   → Tests: 3 contract tests, 3 Cucumber features with Playwright step definitions
-   → Core: 5 data models, 3 API endpoints, UI components
-   → Integration: TMDB service, URL encoding, theme system
-   → Polish: unit tests, Storybook stories, performance
+   → Tests: 5 contract tests, 4 Cucumber features with Playwright step definitions
+   → Core: 5 data models, 5 API endpoints, Enhanced UI components with server-side genre filtering
+   → Integration: Enhanced TMDB service, URL encoding, theme system
+   → Polish: unit tests, Storybook stories, performance, genre filtering validation
 4. Apply task rules ✓:
    → Different files = [P] for parallel execution
    → Tests before implementation (TDD principle)
    → Playwright setup for cross-browser automation
-5. Number tasks sequentially T001-T055
-6. Dependencies verified: Setup → Tests → Models → Services → UI → Polish
+5. Number tasks sequentially T001-T068
+6. Dependencies verified: Setup → Tests → Models → Services → UI → Enhanced Genre Filtering → Polish
 ```
 
 ## Format: `[ID] [P?] Description`
@@ -57,6 +66,7 @@
 - [x] T010 [P] Cucumber feature: Movie discovery flow in tests/integration/movie-discovery.feature
 - [x] T011 [P] Cucumber feature: Watch party creation in tests/integration/watch-party-flow.feature
 - [x] T012 [P] Cucumber feature: Countdown timer behavior in tests/integration/countdown-timer.feature
+- [ ] T058 [P] Enhanced Cucumber feature: Genre filtering behavior in tests/integration/enhanced-genre-filtering.feature
 
 ### Playwright Step Definitions
 - [x] T013 [P] Movie discovery steps in tests/step-definitions/movie-discovery.steps.ts
@@ -64,6 +74,7 @@
 - [x] T015 [P] Countdown timer steps in tests/step-definitions/countdown-timer.steps.ts
 - [x] T016 [P] Playwright World setup in tests/step-definitions/support/world.ts
 - [x] T017 [P] Cucumber hooks with Playwright in tests/step-definitions/support/hooks.ts
+- [ ] T059 [P] Enhanced genre filtering steps in tests/step-definitions/enhanced-genre-filtering.steps.ts
 - [x] T018 [P] Unit test: URL encoding/decoding for watch party data in tests/unit/url-encoder.test.ts
 
 ## Phase 3.3: Data Models (ONLY after tests are failing)
@@ -76,11 +87,15 @@
 ## Phase 3.4: External Services
 - [x] T024 [P] TMDB API client with caching in src/lib/tmdb.ts
 - [x] T025 [P] URL encoding/decoding service in src/lib/url-encoder.ts
+- [ ] T060 [P] Enhanced TMDB client: Add genre filtering support to getPopularMovies function in src/lib/tmdb.ts
+- [ ] T061 [P] Enhanced TMDB client: Improve multi-genre filtering for searchMovies function in src/lib/tmdb.ts
 
 ## Phase 3.5: API Endpoints (Sequential - shared route files)
 - [x] T026 GET /api/movies/search route in src/app/api/movies/search/route.ts
 - [x] T027 GET /api/movies/[id] route in src/app/api/movies/[id]/route.ts
 - [x] T028 GET /api/genres route for genre filtering in src/app/api/genres/route.ts
+- [ ] T062 Update GET /api/movies/popular route to support genre filtering in src/app/api/movies/popular/route.ts
+- [ ] T063 Enhanced GET /api/movies/search route to handle multiple genres with AND logic in src/app/api/movies/search/route.ts
 
 ## Phase 3.6: UI Components - Atoms
 - [x] T029 [P] Button component with variants in src/components/atoms/Button.tsx
@@ -100,6 +115,8 @@
 - [x] T039 Home page with search and grid in src/app/page.tsx
 - [x] T040 Movie details page in src/app/movies/[id]/page.tsx
 - [x] T041 Watch party page in src/app/watch-party/[id]/page.tsx
+- [ ] T064 Enhanced GenreFilter component: Update to trigger new searches instead of client-side filtering in src/features/movie-search/components/GenreFilter.tsx
+- [ ] T065 Enhanced Home page: Update genre filter handlers to perform server-side searches and reset pagination in src/app/page.tsx
 
 ## Phase 3.9: Integration & Polish
 - [x] T042 [P] Theme provider setup in src/app/providers/theme-provider.tsx
@@ -109,6 +126,9 @@
 - [x] T046 [P] Unit tests for utility functions in tests/unit/
 - [x] T047 [P] Storybook stories for all components
 - [x] T048 Execute quickstart.md user journey validation with Playwright
+- [ ] T066 [P] Unit tests for enhanced genre filtering logic in tests/unit/genre-filtering.test.ts
+- [ ] T067 [P] Update popular-movies-api.md contract documentation
+- [ ] T068 Final validation: Genre filtering triggers new searches, maintains filters during pagination, works with both search and popular movies
 - [x] T049 [P] Performance testing with Playwright: <2 second search response time
 - [x] T050 [P] Cross-browser testing: Chrome, Firefox, Safari with Playwright
 - [x] T051 [P] Accessibility testing with Playwright and axe-core

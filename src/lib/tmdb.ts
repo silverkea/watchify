@@ -99,6 +99,8 @@ async function tmdbFetch(endpoint: string, params: Record<string, any> = {}): Pr
     }
   })
 
+  console.log('TMDB Fetch - Final URL:', url.toString());
+
   try {
     const response = await fetch(url.toString(), {
       headers: {
@@ -261,28 +263,52 @@ export async function getNowPlayingMovies(
 }
 
 export async function getPopularMovies(
-  page: number = 1
+  page: number = 1,
+  genreIds?: number[]
 ): Promise<MovieSearchResponse> {
   if (page < 1 || page > 1000) {
     throw new TMDBError('Invalid page number', 400, 'INVALID_PAGE')
   }
 
-  const cacheKey = getCacheKey('/movie/popular', { page })
+  // Validate genre IDs if provided
+  if (genreIds && genreIds.length > 0) {
+    for (const genreId of genreIds) {
+      if (!Number.isInteger(genreId) || genreId <= 0) {
+        throw new TMDBError('Invalid genre ID', 400, 'INVALID_GENRE')
+      }
+    }
+  }
+
+  const cacheKey = getCacheKey('/movie/popular', { page, genreIds: genreIds?.join(',') })
   console.log('TMDB getPopularMovies - Cache key:', cacheKey);
-  const cached = getFromCache<MovieSearchResponse>(cacheKey)
+  
+  // Temporarily disable cache for genre-filtered requests to debug
+  const cached = genreIds && genreIds.length > 0 ? null : getFromCache<MovieSearchResponse>(cacheKey)
   if (cached) {
     console.log('TMDB getPopularMovies - Returning cached result for page:', page);
     return cached
   }
   
-  console.log('TMDB getPopularMovies - Making fresh API call for page:', page);
+  console.log('TMDB getPopularMovies - Making fresh API call for page:', page, 'with genreIds:', genreIds);
 
   const params: Record<string, any> = {
     page,
     include_adult: false
   }
 
-  const rawResponse = await tmdbFetch('/movie/popular', params)
+  let endpoint = '/movie/popular'
+
+  // If genre filtering is requested, use discover endpoint instead of popular
+  if (genreIds && genreIds.length > 0) {
+    endpoint = '/discover/movie'
+    params.with_genres = genreIds.join(',')
+    params.sort_by = 'popularity.desc' // Maintain popularity sorting
+    console.log('TMDB getPopularMovies - Using discover endpoint with genres:', params.with_genres);
+  }
+
+  console.log('TMDB getPopularMovies - Final params:', params);
+  console.log('TMDB getPopularMovies - Using endpoint:', endpoint);
+  const rawResponse = await tmdbFetch(endpoint, params)
   const validatedResponse = TMDBMovieSearchResponseSchema.parse(rawResponse)
 
   // Get genres for all movies

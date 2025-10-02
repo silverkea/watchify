@@ -13,6 +13,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const pageParam = searchParams.get('page')
+    const genreParam = searchParams.get('genre')
     
     // Parse and validate page parameter
     let page = 1
@@ -30,10 +31,34 @@ export async function GET(request: NextRequest) {
       }
       page = parsedPage
     }
+
+    // Parse and validate genre parameter(s)
+    let genreIds: number[] | undefined
+    if (genreParam) {
+      try {
+        const genreStrings = genreParam.split(',').map(s => s.trim()).filter(s => s.length > 0)
+        genreIds = genreStrings.map(genreStr => {
+          const genreId = parseInt(genreStr, 10)
+          if (isNaN(genreId) || genreId <= 0) {
+            throw new Error('Invalid genre ID')
+          }
+          return genreId
+        })
+      } catch (error) {
+        return NextResponse.json(
+          {
+            error: 'Invalid genre ID',
+            message: 'Genre ID must be a positive integer or comma-separated list of positive integers',
+            code: 'INVALID_GENRE'
+          },
+          { status: 400 }
+        )
+      }
+    }
     
     // Fetch popular movies
-    console.log('API Route - Popular Movies params:', { page });
-    const results: MovieSearchResponse = await getPopularMovies(page)
+    console.log('API Route - Popular Movies params:', { page, genreIds });
+    const results: MovieSearchResponse = await getPopularMovies(page, genreIds)
     console.log('API Route - Popular Movies results:', { 
       returnedPage: results.page, 
       totalPages: results.totalPages, 

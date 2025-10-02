@@ -63,16 +63,8 @@ export function MovieGrid({
     });
   }, []);
 
-  // Filter movies by selected genres
-  const filteredMovies = useMemo(() => {
-    if (selectedGenres.length === 0) {
-      return movies;
-    }
-    
-    return movies.filter(movie =>
-      movie.genres.some(genre => selectedGenres.includes(genre.id))
-    );
-  }, [movies, selectedGenres]);
+  // Since we're doing server-side filtering, just use all movies passed from server
+  const filteredMovies = movies;
 
   const handleGenreToggle = useCallback((genreId: number) => {
     if (onGenreToggle) {

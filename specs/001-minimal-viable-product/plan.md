@@ -31,7 +31,17 @@
 - Phase 3-4: Implementation execution (manual or via tools)
 
 ## Summary
-[Extract from feature spec: primary requirement + technical approach from research]
+**Primary Requirement**: Movie watch party platform with enhanced genre filtering that performs server-side searches instead of client-side filtering
+
+**Updated Genre Filtering Approach**: 
+- Genre filters trigger new API requests (not client-side filtering)
+- Returns to page 1 when filters applied/modified  
+- Works with both search results and popular movies
+- Maintains filters during pagination
+- Requires popular movies API to support genre filtering
+- Multiple genres combined with AND logic
+
+**Technical Approach**: Next.js web application with TMDB API integration, stateless URL-encoded watch party data, enhanced genre filtering with server-side implementation
 
 ## Technical Context
 **Language/Version**: TypeScript with Next.js 14+ and React 18+
@@ -105,7 +115,8 @@ src/
 ├── app/                    # Next.js App Router
 │   ├── api/               # API routes (serverless functions)
 │   │   ├── movies/
-│   │   │   ├── search/
+│   │   │   ├── search/    # Enhanced with multi-genre filtering support
+│   │   │   ├── popular/   # NEW: Genre filtering support required
 │   │   │   └── [id]/
 │   │   └── genres/
 │   ├── (home)/            # Home page route group
@@ -237,6 +248,14 @@ stories/                  # Component stories
 
 **Output**: data-model.md, /contracts/*, failing tests, quickstart.md, agent-specific file
 
+**Genre Filtering Implementation Strategy**:
+- Update popular movies API contract to support genre parameter(s)
+- Update TMDB library to handle genre filtering for popular movies
+- Modify frontend genre filter handlers to trigger new searches
+- Ensure pagination maintains active genre filters
+- Update existing search API to handle multiple genres (AND logic)
+- Create contract tests for genre filtering scenarios
+
 ## Phase 2: Task Planning Approach
 *This section describes what the /tasks command will do - DO NOT execute during /plan*
 
@@ -246,6 +265,12 @@ stories/                  # Component stories
 - Each contract → contract test task [P]
 - Each entity → model creation task [P] 
 - Each user story → integration test task
+- Genre filtering enhancement tasks:
+  - Update popular movies API contract [P]
+  - Update TMDB library for genre filtering [P]
+  - Update frontend genre filter handlers
+  - Update pagination to maintain filters
+  - Create genre filtering contract tests [P]
 - Implementation tasks to make tests pass
 
 **Ordering Strategy**:
@@ -253,7 +278,7 @@ stories/                  # Component stories
 - Dependency order: Models before services before UI
 - Mark [P] for parallel execution (independent files)
 
-**Estimated Output**: 25-30 numbered, ordered tasks in tasks.md
+**Estimated Output**: 30-35 numbered, ordered tasks in tasks.md (increased due to genre filtering enhancements)
 
 **IMPORTANT**: This phase is executed by the /tasks command, NOT by /plan
 

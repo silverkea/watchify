@@ -82,7 +82,16 @@ export default function HomePage() {
       setLoading(true);
       setError(null);
       
-      const response = await fetch(`/api/movies/popular?page=${page}`);
+      const params = new URLSearchParams({
+        page: page.toString()
+      });
+
+      // Include genre filters if any are selected
+      if (selectedGenres.length > 0) {
+        params.append('genre', selectedGenres.join(','));
+      }
+      
+      const response = await fetch(`/api/movies/popular?${params}`);
       if (response.ok) {
         const data: SearchResponse = await response.json();
         setMovies(prev => [...prev, ...data.results]);
@@ -183,23 +192,80 @@ export default function HomePage() {
     router.push(`/movies/${movie.id}`);
   }, [router]);
 
+  const loadPopularMoviesWithGenres = useCallback(async (genreIds: number[], page: number = 1) => {
+    try {
+      setLoading(true);
+      setError(null);
+      setIsNowPlayingMode(true);
+
+      const params = new URLSearchParams({
+        page: page.toString()
+      });
+
+      if (genreIds.length > 0) {
+        params.append('genre', genreIds.join(','));
+      }
+
+      console.log('Loading popular movies with genres:', { genreIds, page });
+      const response = await fetch(`/api/movies/popular?${params}`);
+      
+      if (response.ok) {
+        const data: SearchResponse = await response.json();
+        console.log('Popular movies with genres loaded:', { 
+          page: data.page, 
+          totalPages: data.totalPages, 
+          resultsCount: data.results.length,
+          genreIds,
+          firstThreeMovies: data.results.slice(0, 3).map(m => ({ id: m.id, title: m.title }))
+        });
+        
+        if (page === 1) {
+          console.log('Setting movies to new data:', data.results.length, 'movies');
+          setMovies(data.results);
+        } else {
+          setMovies(prev => [...prev, ...data.results]);
+        }
+        
+        setHasMore(data.page < data.totalPages);
+        setCurrentPage(page);
+      } else {
+        setError('Failed to load popular movies');
+      }
+    } catch (err) {
+      console.error('Error loading popular movies with genres:', err);
+      setError('Failed to load popular movies. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   const handleGenreToggle = useCallback((genreId: number) => {
     setSelectedGenres(prev => {
       const newGenres = prev.includes(genreId)
         ? prev.filter(id => id !== genreId)
         : [...prev, genreId];
       
-      // Re-search with new genre filters if there's a search query
+      console.log('Genre toggle - new genres:', newGenres, 'for genreId:', genreId);
+      
+      // Always trigger a new search - either search results or popular movies
+      // Reset to page 1 when filters change
+      setCurrentPage(1);
+      setHasMore(false);
+      
+      // Trigger search immediately with new genres
       if (searchQuery) {
-        // Use a timeout to ensure state updates first
-        setTimeout(() => {
-          performSearch(searchQuery, 1, false);
-        }, 0);
+        // Re-search with new genre filters for search results
+        console.log('Re-searching with genres:', newGenres);
+        performSearch(searchQuery, 1, false);
+      } else {
+        // Load filtered popular movies when no search query
+        console.log('Loading popular movies with genres:', newGenres);
+        loadPopularMoviesWithGenres(newGenres, 1);
       }
       
       return newGenres;
     });
-  }, [searchQuery, performSearch]);
+  }, [searchQuery, performSearch, loadPopularMoviesWithGenres]);
 
   const handleGenresClear = useCallback(() => {
     setSelectedGenres([]);
@@ -209,8 +275,11 @@ export default function HomePage() {
       setTimeout(() => {
         performSearch(searchQuery, 1, false);
       }, 0);
+    } else {
+      // Load popular movies without genre filters
+      loadPopularMoviesWithGenres([], 1);
     }
-  }, [searchQuery, performSearch]);
+  }, [searchQuery, performSearch, loadPopularMoviesWithGenres]);
 
   return (
     <main className="min-h-screen bg-background">
