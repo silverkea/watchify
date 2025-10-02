@@ -33,6 +33,7 @@ export default function MovieDetailsPage({ params }: MovieDetailsPageProps) {
   const [movie, setMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [isCreatingParty, setIsCreatingParty] = useState(false);
   const [selectedDateTime, setSelectedDateTime] = useState<Date | null>(null);
   const [dateTimeError, setDateTimeError] = useState<string | null>(null);
@@ -220,7 +221,7 @@ export default function MovieDetailsPage({ params }: MovieDetailsPageProps) {
             <div className="space-y-2">
               <Button
                 variant="primary"
-                onClick={() => setIsCreatingParty(true)}
+                onClick={() => setShowScheduleModal(true)}
                 className="w-full"
                 disabled={isCreatingParty}
               >
@@ -314,7 +315,7 @@ export default function MovieDetailsPage({ params }: MovieDetailsPageProps) {
       </div>
 
       {/* Watch Party Creation Modal */}
-      {isCreatingParty && (
+      {showScheduleModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-card rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 space-y-6">
@@ -325,7 +326,7 @@ export default function MovieDetailsPage({ params }: MovieDetailsPageProps) {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => setIsCreatingParty(false)}
+                  onClick={() => setShowScheduleModal(false)}
                   className="p-2"
                 >
                   ×
@@ -370,7 +371,7 @@ export default function MovieDetailsPage({ params }: MovieDetailsPageProps) {
               <div className="flex space-x-3">
                 <Button
                   variant="ghost"
-                  onClick={() => setIsCreatingParty(false)}
+                  onClick={() => setShowScheduleModal(false)}
                   className="flex-1"
                 >
                   Cancel

@@ -104,6 +104,13 @@ export function DateTimePicker({
     }
   };
 
+  // Validate and update parent when initial values are set
+  useEffect(() => {
+    if (selectedDate && selectedTime) {
+      validateAndUpdate(selectedDate, selectedTime);
+    }
+  }, [selectedDate, selectedTime]);
+
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newDate = e.target.value;
     setSelectedDate(newDate);
