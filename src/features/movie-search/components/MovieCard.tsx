@@ -9,6 +9,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Star, Calendar, Clock } from 'lucide-react';
 import { Badge } from '@/components/atoms/Badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Movie } from '@/types';
 import { cn } from '@/lib/utils';
 import { useIntersectionObserver } from '@/lib/performance';
@@ -50,10 +51,6 @@ export function MovieCard({
     }
   };
 
-  const posterUrl = movie.posterPath 
-    ? `https://image.tmdb.org/t/p/w500${movie.posterPath}`
-    : '/images/poster-placeholder.png';
-
   const releaseYear = movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : null;
 
   const isClickable = !!onClick;
@@ -92,18 +89,21 @@ export function MovieCard({
       >
         {/* Compact Poster */}
         <div className="relative w-24 h-32 flex-shrink-0">
-          {hasIntersected && (
+          {movie.posterPath && hasIntersected ? (
             <Image
-              src={posterUrl}
+              src={`https://image.tmdb.org/t/p/w500${movie.posterPath}`}
               alt={`${movie.title} poster`}
               fill
               className="object-cover"
               priority={priority}
               sizes="96px"
             />
-          )}
-          {!hasIntersected && (
+          ) : movie.posterPath && !hasIntersected ? (
             <div className="w-full h-full bg-gray-200 dark:bg-gray-700 animate-pulse" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-muted">
+              <Skeleton className="w-full h-full" />
+            </div>
           )}
         </div>
         
@@ -153,18 +153,21 @@ export function MovieCard({
     >
       {/* Poster */}
       <div className="relative aspect-[2/3] w-full">
-        {hasIntersected && (
+        {movie.posterPath && hasIntersected ? (
           <Image
-            src={posterUrl}
+            src={`https://image.tmdb.org/t/p/w500${movie.posterPath}`}
             alt={`${movie.title} poster`}
             fill
             className="object-cover transition-transform duration-200 group-hover:scale-105"
             priority={priority}
             sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
           />
-        )}
-        {!hasIntersected && (
+        ) : movie.posterPath && !hasIntersected ? (
           <div className="w-full h-full bg-gray-200 dark:bg-gray-700 animate-pulse" />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-muted">
+            <Skeleton className="w-full h-full" />
+          </div>
         )}
         
         {/* Rating Badge */}

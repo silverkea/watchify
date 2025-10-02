@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/atoms/Button';
 import { Badge } from '@/components/atoms/Badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { DateTimePicker } from '@/features/watch-party/components/DateTimePicker';
 import { Movie, WatchParty } from '@/types';
 import { cn } from '@/lib/utils';
@@ -177,7 +178,7 @@ export default function MovieDetailsPage({ params }: MovieDetailsPageProps) {
 
   const posterUrl = movie.posterPath 
     ? `https://image.tmdb.org/t/p/w500${movie.posterPath}`
-    : '/images/poster-placeholder.png';
+    : null;
 
   const backdropUrl = movie.backdropPath 
     ? `https://image.tmdb.org/t/p/w1280${movie.backdropPath}`
@@ -217,13 +218,19 @@ export default function MovieDetailsPage({ params }: MovieDetailsPageProps) {
           {/* Poster */}
           <div className="space-y-4">
             <div className="relative aspect-[2/3] rounded-lg overflow-hidden shadow-xl">
-              <Image
-                src={posterUrl}
-                alt={`${movie.title} poster`}
-                fill
-                className="object-cover"
-                priority
-              />
+              {movie.posterPath ? (
+                <Image
+                  src={`https://image.tmdb.org/t/p/w500${movie.posterPath}`}
+                  alt={`${movie.title} poster`}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-muted">
+                  <Skeleton className="w-full h-full" />
+                </div>
+              )}
             </div>
             
             {/* Action Buttons */}
@@ -356,12 +363,16 @@ export default function MovieDetailsPage({ params }: MovieDetailsPageProps) {
               <div className="space-y-4">
                 <div className="flex items-center space-x-3 p-3 bg-muted rounded-lg">
                   <div className="relative w-12 h-16 rounded overflow-hidden flex-shrink-0">
-                    <Image
-                      src={posterUrl}
-                      alt={movie.title}
-                      fill
-                      className="object-cover"
-                    />
+                    {movie.posterPath ? (
+                      <Image
+                        src={`https://image.tmdb.org/t/p/w500${movie.posterPath}`}
+                        alt={movie.title}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <Skeleton className="w-full h-full" />
+                    )}
                   </div>
                   <div className="min-w-0">
                     <div className="font-medium text-foreground truncate">

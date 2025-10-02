@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/atoms/Button';
 import { Badge } from '@/components/atoms/Badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { CountdownTimer } from '@/features/watch-party/components/CountdownTimer';
 import { Movie, WatchParty } from '@/types';
 import { cn } from '@/lib/utils';
@@ -188,7 +189,7 @@ export default function WatchPartyPage({ params }: WatchPartyPageProps) {
 
   const posterUrl = watchPartyData.moviePoster 
     ? `https://image.tmdb.org/t/p/w500${watchPartyData.moviePoster}`
-    : '/images/poster-placeholder.png';
+    : null;
 
   const scheduledDate = new Date(watchPartyData.scheduledTime);
 
@@ -235,13 +236,19 @@ export default function WatchPartyPage({ params }: WatchPartyPageProps) {
           {/* Movie Info */}
           <div className="space-y-6">
             <div className="relative aspect-[2/3] rounded-lg overflow-hidden shadow-xl">
-              <Image
-                src={posterUrl}
-                alt={`${watchPartyData.movieTitle} poster`}
-                fill
-                className="object-cover"
-                priority
-              />
+              {watchPartyData.moviePoster ? (
+                <Image
+                  src={`https://image.tmdb.org/t/p/w500${watchPartyData.moviePoster}`}
+                  alt={`${watchPartyData.movieTitle} poster`}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-muted">
+                  <Skeleton className="w-full h-full" />
+                </div>
+              )}
             </div>
 
             <div className="space-y-4">
