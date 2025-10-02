@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
+import { useTheme } from 'next-themes';
 import { Sun, Moon, Monitor } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export type Theme = 'light' | 'dark' | 'system';
 
 export interface ThemeToggleProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onClick'> {
-  theme?: Theme;
-  onThemeChange?: (theme: Theme) => void;
   variant?: 'default' | 'outline' | 'ghost' | 'neon';
   size?: 'sm' | 'md' | 'lg';
   showTooltip?: boolean;
@@ -14,18 +13,17 @@ export interface ThemeToggleProps extends Omit<React.ButtonHTMLAttributes<HTMLBu
 
 const ThemeToggle = React.forwardRef<HTMLButtonElement, ThemeToggleProps>(
   ({ 
-    theme,
-    onThemeChange,
     variant = 'default', 
     size = 'md',
     showTooltip = false,
     className,
     ...props 
   }, ref) => {
+    const { theme, setTheme } = useTheme();
     const [isTransitioning, setIsTransitioning] = useState(false);
     const [lastClickTime, setLastClickTime] = useState(0);
 
-    const currentTheme = theme || 'system';
+    const currentTheme = (theme as Theme) || 'system';
 
     const getNextTheme = (current: Theme): Theme => {
       switch (current) {
@@ -123,7 +121,7 @@ const ThemeToggle = React.forwardRef<HTMLButtonElement, ThemeToggleProps>(
       setIsTransitioning(true);
       
       const nextTheme = getNextTheme(currentTheme);
-      onThemeChange?.(nextTheme);
+      setTheme(nextTheme);
       
       // Reset transition state
       setTimeout(() => setIsTransitioning(false), 200);
