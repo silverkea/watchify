@@ -62,7 +62,13 @@ export default function WatchPartyPage({ params }: WatchPartyPageProps) {
 
       // Decode the watch party data from URL
       try {
-        const decodedData = JSON.parse(atob(params.id));
+        // Convert URL-safe base64 back to standard base64
+        const base64 = params.id
+          .replace(/-/g, '+')
+          .replace(/_/g, '/')
+          .padEnd(params.id.length + (4 - params.id.length % 4) % 4, '=');
+        
+        const decodedData = JSON.parse(atob(base64));
         setWatchPartyData(decodedData);
 
         // Load full movie details

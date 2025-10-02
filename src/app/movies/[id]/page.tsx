@@ -82,7 +82,10 @@ export default function MovieDetailsPage({ params }: MovieDetailsPageProps) {
 
       // For now, we'll encode the data and navigate to the watch party page
       // In a full implementation, this would POST to /api/watch-party/create
-      const encodedData = btoa(JSON.stringify(watchPartyData));
+      const encodedData = btoa(JSON.stringify(watchPartyData))
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=/g, '');
       
       router.push(`/watch-party/${encodedData}`);
     } catch (err) {
