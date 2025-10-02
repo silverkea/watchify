@@ -11,6 +11,7 @@ import { Star, Calendar, Clock } from 'lucide-react';
 import { Badge } from '@/components/atoms/Badge';
 import { Movie } from '@/types';
 import { cn } from '@/lib/utils';
+import { useIntersectionObserver } from '@/lib/performance';
 
 export interface MovieCardProps {
   movie: Movie;
@@ -33,6 +34,9 @@ export function MovieCard({
   className,
   priority = false
 }: MovieCardProps) {
+  // Lazy loading with intersection observer
+  const { ref, hasIntersected } = useIntersectionObserver<HTMLDivElement>();
+
   const handleClick = () => {
     if (onClick) {
       onClick(movie);
@@ -78,6 +82,7 @@ export function MovieCard({
   if (variant === 'compact') {
     return (
       <div
+        ref={ref}
         className={cardClasses}
         onClick={isClickable ? handleClick : undefined}
         onKeyDown={isClickable ? handleKeyDown : undefined}
@@ -87,14 +92,19 @@ export function MovieCard({
       >
         {/* Compact Poster */}
         <div className="relative w-24 h-32 flex-shrink-0">
-          <Image
-            src={posterUrl}
-            alt={`${movie.title} poster`}
-            fill
-            className="object-cover"
-            priority={priority}
-            sizes="96px"
-          />
+          {hasIntersected && (
+            <Image
+              src={posterUrl}
+              alt={`${movie.title} poster`}
+              fill
+              className="object-cover"
+              priority={priority}
+              sizes="96px"
+            />
+          )}
+          {!hasIntersected && (
+            <div className="w-full h-full bg-gray-200 dark:bg-gray-700 animate-pulse" />
+          )}
         </div>
         
         {/* Compact Content */}
@@ -133,6 +143,7 @@ export function MovieCard({
 
   return (
     <div
+      ref={ref}
       className={cardClasses}
       onClick={isClickable ? handleClick : undefined}
       onKeyDown={isClickable ? handleKeyDown : undefined}
@@ -142,14 +153,19 @@ export function MovieCard({
     >
       {/* Poster */}
       <div className="relative aspect-[2/3] w-full">
-        <Image
-          src={posterUrl}
-          alt={`${movie.title} poster`}
-          fill
-          className="object-cover transition-transform duration-200 group-hover:scale-105"
-          priority={priority}
-          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-        />
+        {hasIntersected && (
+          <Image
+            src={posterUrl}
+            alt={`${movie.title} poster`}
+            fill
+            className="object-cover transition-transform duration-200 group-hover:scale-105"
+            priority={priority}
+            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+          />
+        )}
+        {!hasIntersected && (
+          <div className="w-full h-full bg-gray-200 dark:bg-gray-700 animate-pulse" />
+        )}
         
         {/* Rating Badge */}
         {showRating && movie.voteAverage > 0 && (

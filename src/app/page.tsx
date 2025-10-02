@@ -248,6 +248,7 @@ export default function HomePage() {
             onLoadMore={handleLoadMore}
             onGenreToggle={handleGenreToggle}
             onGenresClear={handleGenresClear}
+            gridCols={{ sm: 2, md: 3, lg: 6, xl: 6 }}
             className="max-w-7xl mx-auto"
           />
         </div>

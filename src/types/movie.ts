@@ -28,16 +28,16 @@ export type CastMember = z.infer<typeof CastMemberSchema>
 export const MovieSchema = z.object({
   id: z.number().int().positive(),
   title: z.string().min(1).max(255),
-  overview: z.string().max(2000),
-  releaseDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Must be in YYYY-MM-DD format'),
+  overview: z.string().max(2000).optional().default(''),
+  releaseDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Must be in YYYY-MM-DD format').optional().default(''),
   posterPath: z.string().nullable(),
   backdropPath: z.string().nullable(),
-  voteAverage: z.number().min(0).max(10),
-  voteCount: z.number().int().nonnegative(),
+  voteAverage: z.number().min(0).max(10).optional().default(0),
+  voteCount: z.number().int().nonnegative().optional().default(0),
   genres: z.array(GenreSchema),
   runtime: z.number().int().positive().nullable(),
   cast: z.array(CastMemberSchema),
-  popularity: z.number().nonnegative()
+  popularity: z.number().nonnegative().optional().default(0)
 })
 
 export type Movie = z.infer<typeof MovieSchema>
@@ -85,16 +85,16 @@ export const TMDBCastMemberSchema = z.object({
 export const TMDBMovieSchema = z.object({
   id: z.number(),
   title: z.string(),
-  overview: z.string(),
-  release_date: z.string(),
+  overview: z.string().optional(),
+  release_date: z.string().optional(),
   poster_path: z.string().nullable(),
   backdrop_path: z.string().nullable(),
-  vote_average: z.number(),
-  vote_count: z.number(),
+  vote_average: z.number().optional(),
+  vote_count: z.number().optional(),
   genre_ids: z.array(z.number()).optional(),
   genres: z.array(TMDBGenreSchema).optional(),
   runtime: z.number().nullable().optional(),
-  popularity: z.number()
+  popularity: z.number().optional()
 })
 
 export const TMDBMovieSearchResponseSchema = z.object({
@@ -139,16 +139,16 @@ export function transformTMDBMovie(tmdbMovie: z.infer<typeof TMDBMovieSchema>, g
   return {
     id: tmdbMovie.id,
     title: tmdbMovie.title,
-    overview: tmdbMovie.overview,
-    releaseDate: tmdbMovie.release_date,
+    overview: tmdbMovie.overview || '',
+    releaseDate: tmdbMovie.release_date || '',
     posterPath: tmdbMovie.poster_path,
     backdropPath: tmdbMovie.backdrop_path,
-    voteAverage: tmdbMovie.vote_average,
-    voteCount: tmdbMovie.vote_count,
+    voteAverage: tmdbMovie.vote_average || 0,
+    voteCount: tmdbMovie.vote_count || 0,
     genres: genres,
     runtime: tmdbMovie.runtime || null,
     cast: cast,
-    popularity: tmdbMovie.popularity
+    popularity: tmdbMovie.popularity || 0
   }
 }
 
