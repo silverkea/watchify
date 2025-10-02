@@ -31,6 +31,7 @@ export default function HomePage() {
   const [hasMore, setHasMore] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [lastSearchQuery, setLastSearchQuery] = useState(''); // Track last successful search
+  const [isNowPlayingMode, setIsNowPlayingMode] = useState(true); // Track if showing now playing vs search results
   
   const router = useRouter();
 
@@ -57,25 +58,43 @@ export default function HomePage() {
       setLoading(true);
       setError(null);
       
-      // For demo purposes, search for popular movies
-      const query = 'marvel'; // Set a default search query for trending
-      setSearchQuery(query);
-      setLastSearchQuery(query);
-      
-      const response = await fetch('/api/movies/search?q=marvel&page=1');
+      // Load "Popular" movies as the default homepage content
+      const response = await fetch('/api/movies/popular?page=1');
       if (response.ok) {
         const data: SearchResponse = await response.json();
         setMovies(data.results);
         setHasMore(data.page < data.totalPages);
         setCurrentPage(data.page);
+        setIsNowPlayingMode(true);
       } else {
-        setError('Failed to load trending movies');
+        setError('Failed to load popular movies');
       }
     } catch (err) {
-      setError('Failed to load trending movies');
+      setError('Failed to load now playing movies');
     } finally {
       setLoading(false);
       setIsInitialLoad(false);
+    }
+  };
+
+  const loadMoreNowPlaying = async (page: number) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await fetch(`/api/movies/popular?page=${page}`);
+      if (response.ok) {
+        const data: SearchResponse = await response.json();
+        setMovies(prev => [...prev, ...data.results]);
+        setHasMore(data.page < data.totalPages);
+        setCurrentPage(page);
+      } else {
+        setError('Failed to load more popular movies');
+      }
+    } catch (err) {
+      setError('Failed to load more popular movies');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -84,6 +103,7 @@ export default function HomePage() {
     try {
       setLoading(true);
       setError(null);
+      setIsNowPlayingMode(false); // Exit now playing mode when searching
 
       const params = new URLSearchParams({
         q: query,
@@ -134,25 +154,30 @@ export default function HomePage() {
 
   const handleClearSearch = useCallback(() => {
     setSearchQuery('');
-    setMovies([]);
+    setLastSearchQuery('');
+    setSelectedGenres([]);
     setCurrentPage(1);
     setHasMore(false);
+    setIsNowPlayingMode(true);
     loadTrendingMovies();
   }, []);
 
   const handleLoadMore = useCallback(() => {
-    console.log('Load More clicked:', { lastSearchQuery, hasMore, loading, currentPage });
-    if (lastSearchQuery && hasMore && !loading) {
-      console.log('Calling performSearch with page:', currentPage + 1);
-      performSearch(lastSearchQuery, currentPage + 1, true);
-    } else {
-      console.log('Load More conditions not met:', { 
-        hasLastSearchQuery: !!lastSearchQuery, 
-        hasMore, 
-        isNotLoading: !loading 
-      });
+    console.log('Load More clicked:', { isNowPlayingMode, lastSearchQuery, hasMore, loading, currentPage });
+    
+    if (!hasMore || loading) {
+      console.log('Load More conditions not met:', { hasMore, isNotLoading: !loading });
+      return;
     }
-  }, [lastSearchQuery, hasMore, loading, currentPage, performSearch]);
+    
+    if (isNowPlayingMode) {
+      console.log('Loading more now playing movies, page:', currentPage + 1);
+      loadMoreNowPlaying(currentPage + 1);
+    } else if (lastSearchQuery) {
+      console.log('Loading more search results, page:', currentPage + 1);
+      performSearch(lastSearchQuery, currentPage + 1, true);
+    }
+  }, [isNowPlayingMode, lastSearchQuery, hasMore, loading, currentPage, performSearch]);
 
   const handleMovieClick = useCallback((movie: Movie) => {
     router.push(`/movies/${movie.id}`);
@@ -247,11 +272,19 @@ export default function HomePage() {
                   Search Results for "{searchQuery}"
                 </h2>
               </>
+            ) : isNowPlayingMode ? (
+              <>
+                <TrendingUp className="w-5 h-5 text-purple-600" />
+                <h2 className="text-2xl font-semibold text-foreground">
+                  Popular Movies
+                </h2>
+                <Sparkles className="w-4 h-4 text-yellow-500" />
+              </>
             ) : (
               <>
                 <TrendingUp className="w-5 h-5 text-purple-600" />
                 <h2 className="text-2xl font-semibold text-foreground">
-                  Trending Movies
+                  Movies
                 </h2>
                 <Sparkles className="w-4 h-4 text-yellow-500" />
               </>

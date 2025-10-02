@@ -206,6 +206,114 @@ export async function searchMovies(
   return result
 }
 
+export async function getNowPlayingMovies(
+  page: number = 1
+): Promise<MovieSearchResponse> {
+  if (page < 1 || page > 1000) {
+    throw new TMDBError('Invalid page number', 400, 'INVALID_PAGE')
+  }
+
+  const cacheKey = getCacheKey('/movie/now_playing', { page })
+  console.log('TMDB getNowPlayingMovies - Cache key:', cacheKey);
+  const cached = getFromCache<MovieSearchResponse>(cacheKey)
+  if (cached) {
+    console.log('TMDB getNowPlayingMovies - Returning cached result for page:', page);
+    return cached
+  }
+  
+  console.log('TMDB getNowPlayingMovies - Making fresh API call for page:', page);
+
+  const params: Record<string, any> = {
+    page,
+    include_adult: false
+  }
+
+  const rawResponse = await tmdbFetch('/movie/now_playing', params)
+  const validatedResponse = TMDBMovieSearchResponseSchema.parse(rawResponse)
+
+  // Get genres for all movies
+  const genres = await getGenres()
+  
+  // Transform to our format
+  const transformedMovies = await Promise.all(
+    validatedResponse.results.map(async (movie) => {
+      // Get movie genres from the global genres list
+      const movieGenres = genres.genres.filter(genre => 
+        movie.genre_ids?.includes(genre.id) || false
+      )
+      
+      // Get cast for each movie (limited to main cast)
+      const cast = await getMovieCredits(movie.id).catch(() => [])
+      
+      return transformTMDBMovie(movie, movieGenres, cast.slice(0, 5))
+    })
+  )
+
+  const result: MovieSearchResponse = {
+    page: validatedResponse.page,
+    results: transformedMovies,
+    totalPages: validatedResponse.total_pages,
+    totalResults: validatedResponse.total_results
+  }
+
+  setCache(cacheKey, result)
+  return result
+}
+
+export async function getPopularMovies(
+  page: number = 1
+): Promise<MovieSearchResponse> {
+  if (page < 1 || page > 1000) {
+    throw new TMDBError('Invalid page number', 400, 'INVALID_PAGE')
+  }
+
+  const cacheKey = getCacheKey('/movie/popular', { page })
+  console.log('TMDB getPopularMovies - Cache key:', cacheKey);
+  const cached = getFromCache<MovieSearchResponse>(cacheKey)
+  if (cached) {
+    console.log('TMDB getPopularMovies - Returning cached result for page:', page);
+    return cached
+  }
+  
+  console.log('TMDB getPopularMovies - Making fresh API call for page:', page);
+
+  const params: Record<string, any> = {
+    page,
+    include_adult: false
+  }
+
+  const rawResponse = await tmdbFetch('/movie/popular', params)
+  const validatedResponse = TMDBMovieSearchResponseSchema.parse(rawResponse)
+
+  // Get genres for all movies
+  const genres = await getGenres()
+  
+  // Transform to our format
+  const transformedMovies = await Promise.all(
+    validatedResponse.results.map(async (movie) => {
+      // Get movie genres from the global genres list
+      const movieGenres = genres.genres.filter(genre => 
+        movie.genre_ids?.includes(genre.id) || false
+      )
+      
+      // Get cast for each movie (limited to main cast)
+      const cast = await getMovieCredits(movie.id).catch(() => [])
+      
+      return transformTMDBMovie(movie, movieGenres, cast.slice(0, 5))
+    })
+  )
+
+  const result: MovieSearchResponse = {
+    page: validatedResponse.page,
+    results: transformedMovies,
+    totalPages: validatedResponse.total_pages,
+    totalResults: validatedResponse.total_results
+  }
+
+  setCache(cacheKey, result)
+  return result
+}
+
 export async function getMovieDetails(movieId: number): Promise<Movie> {
   if (!Number.isInteger(movieId) || movieId <= 0) {
     throw new TMDBError('Invalid movie ID', 400, 'INVALID_MOVIE_ID')

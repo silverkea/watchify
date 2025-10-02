@@ -27,6 +27,7 @@
 A user wants to discover movies, select one they're interested in, and coordinate a synchronized watch party with friends or family at a specific date and time.
 
 ### Acceptance Scenarios
+0. **Given** the user visits the home page without any search, **When** the page loads, **Then** they see "Popular Movies" displayed in a responsive grid as the default content
 1. **Given** the user is on the home page, **When** they search for "action movies", **Then** they see a responsive grid of action movies with posters, titles, release dates, and star ratings that adapts to their screen size
 2. **Given** the user sees the movie grid, **When** they apply a genre filter, **Then** the grid updates to show only movies from that genre while maintaining responsive layout
 3. **Given** the user clicks on a movie from the grid, **When** the movie detail page loads, **Then** they see expanded information including synopsis and main actors
@@ -35,6 +36,7 @@ A user wants to discover movies, select one they're interested in, and coordinat
 6. **Given** the countdown timer reaches zero, **When** the time expires, **Then** the timer is replaced with "Watching Now" message, and after 4 hours shows "Complete"
 7. **Given** the user is on a watch party landing page, **When** they click the "Copy Link" button, **Then** a shareable URL is copied to their clipboard
 8. **Given** someone opens a shared watch party URL, **When** the page loads, **Then** they see the same movie details and countdown timer in their local timezone
+9. **Given** the user has performed a search, **When** they clear the search, **Then** they return to the "Popular Movies" default view
 
 ### Edge Cases
 - What happens when no movies match the search criteria?
@@ -49,22 +51,24 @@ A user wants to discover movies, select one they're interested in, and coordinat
 ## Requirements
 
 ### Functional Requirements
-- **FR-001**: System MUST allow users to search for movies by title or keyword
-- **FR-002**: System MUST display movies in a responsive grid layout with poster image, title, release date, and star rating that adapts to different screen sizes
-- **FR-003**: System MUST provide genre filtering capability for the movie grid
-- **FR-004**: System MUST display detailed movie information including synopsis and cast members when a movie is selected
-- **FR-005**: System MUST allow users to schedule watch parties using a calendar picker for date selection and dropdown menus for time selection
-- **FR-006**: System MUST generate a unique watch party landing page for each scheduled party
-- **FR-007**: System MUST display a prominent countdown timer on watch party pages
-- **FR-008**: System MUST replace countdown timer with "Watching Now" message when time reaches zero, then "Complete" after 4 hours
-- **FR-009**: System MUST display all movie details below the countdown timer on watch party pages
-- **FR-010**: System MUST provide a "Copy Link" button below the countdown timer on watch party pages
-- **FR-011**: System MUST generate shareable URLs with base64 encoded movie and watch party data in query string when copy link is used
-- **FR-012**: System MUST reconstruct watch party landing page from base64 encoded URL parameters without requiring server-side storage
-- **FR-013**: System MUST display countdown timer in user's local timezone based on browser settings
-- **FR-014**: System MUST synchronize countdown timing globally using UTC storage with client-side timezone conversion for display
-- **FR-015**: System MUST integrate with external movie API (e.g., TMDB) for real-time movie data fetching
-- **FR-016**: System MUST allow anonymous users to create and join watch parties without authentication or account creation
+- **FR-001**: System MUST display "Popular Movies" as default homepage content when no search is active
+- **FR-002**: System MUST allow users to search for movies by title or keyword
+- **FR-003**: System MUST display movies in a responsive grid layout with poster image, title, release date, and star rating that adapts to different screen sizes
+- **FR-004**: System MUST provide genre filtering capability for the movie grid
+- **FR-005**: System MUST display detailed movie information including synopsis and cast members when a movie is selected
+- **FR-006**: System MUST allow users to schedule watch parties using a calendar picker for date selection and dropdown menus for time selection
+- **FR-007**: System MUST generate a unique watch party landing page for each scheduled party
+- **FR-008**: System MUST display a prominent countdown timer on watch party pages
+- **FR-009**: System MUST replace countdown timer with "Watching Now" message when time reaches zero, then "Complete" after 4 hours
+- **FR-010**: System MUST display all movie details below the countdown timer on watch party pages
+- **FR-011**: System MUST provide a "Copy Link" button below the countdown timer on watch party pages
+- **FR-012**: System MUST generate shareable URLs with base64 encoded movie and watch party data in query string when copy link is used
+- **FR-013**: System MUST reconstruct watch party landing page from base64 encoded URL parameters without requiring server-side storage
+- **FR-014**: System MUST display countdown timer in user's local timezone based on browser settings
+- **FR-015**: System MUST synchronize countdown timing globally using UTC storage with client-side timezone conversion for display
+- **FR-016**: System MUST integrate with external movie API (e.g., TMDB) for real-time movie data fetching
+- **FR-017**: System MUST allow anonymous users to create and join watch parties without authentication or account creation
+- **FR-018**: System MUST return to "Popular Movies" view when search is cleared
 
 ### Non-Functional Requirements
 - **NFR-001**: Movie search results MUST load within 2 seconds with 95% success rate for acceptable user experience
