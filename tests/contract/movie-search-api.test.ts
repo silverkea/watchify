@@ -122,23 +122,6 @@ describe('Movie Search API Contract', () => {
       }
     })
 
-    it('should filter by genre when provided', async () => {
-      const response = await fetch(`${API_BASE}/api/movies/search?q=action&genre=28`)
-      
-      if (response.status === 200) {
-        const data = await response.json()
-        
-        // All movies should include the specified genre
-        data.results.forEach((movie: any) => {
-          const hasGenre = movie.genres.some((genre: any) => genre.id === 28)
-          expect(hasGenre).toBe(true)
-        })
-      } else {
-        // For now, expect 404 as endpoint doesn't exist
-        expect(response.status).toBe(404)
-      }
-    })
-
     it('should return 400 for invalid query parameters', async () => {
       // Test empty query
       const emptyResponse = await fetch(`${API_BASE}/api/movies/search?q=`)
@@ -168,72 +151,6 @@ describe('Movie Search API Contract', () => {
       } else {
         // For now, expect 404 as endpoint doesn't exist
         expect(response.status).toBe(404)
-      }
-    })
-
-    // Enhanced multi-genre filtering tests (T057)
-    it('should support multiple genre filtering with AND logic', async () => {
-      const actionGenreId = 28 // Action
-      const adventureGenreId = 12 // Adventure
-      const response = await fetch(`${API_BASE}/api/movies/search?q=movie&genre=${actionGenreId},${adventureGenreId}`)
-      
-      if (response.status === 200) {
-        const data = await response.json()
-        expect(data).toHaveProperty('results')
-        expect(Array.isArray(data.results)).toBe(true)
-        
-        // Verify all movies have BOTH genres (AND logic)
-        data.results.forEach((movie: any) => {
-          const hasAction = movie.genres.some((genre: any) => genre.id === actionGenreId)
-          const hasAdventure = movie.genres.some((genre: any) => genre.id === adventureGenreId)
-          expect(hasAction && hasAdventure).toBe(true)
-        })
-      } else {
-        // Currently expect 404 as enhanced endpoint doesn't exist
-        expect(response.status).toBe(404)
-      }
-    })
-
-    it('should validate multiple genre IDs format', async () => {
-      // Test invalid genre format
-      const response = await fetch(`${API_BASE}/api/movies/search?q=test&genre=28,invalid,12`)
-      
-      if (response.status !== 404) {
-        expect(response.status).toBe(400)
-        const data = await response.json()
-        expect(data.error).toBe('Invalid genre ID')
-        expect(data.code).toBe('INVALID_GENRE')
-      } else {
-        expect(response.status).toBe(404)
-      }
-    })
-
-    it('should maintain genre filters across pagination', async () => {
-      const genreId = 35 // Comedy
-      
-      // Get first page with genre filter
-      const page1Response = await fetch(`${API_BASE}/api/movies/search?q=funny&page=1&genre=${genreId}`)
-      // Get second page with same genre filter
-      const page2Response = await fetch(`${API_BASE}/api/movies/search?q=funny&page=2&genre=${genreId}`)
-      
-      if (page1Response.status === 200 && page2Response.status === 200) {
-        const page1Data = await page1Response.json()
-        const page2Data = await page2Response.json()
-        
-        // Both pages should maintain genre filtering
-        page1Data.results.forEach((movie: any) => {
-          const hasGenre = movie.genres.some((genre: any) => genre.id === genreId)
-          expect(hasGenre).toBe(true)
-        })
-        
-        page2Data.results.forEach((movie: any) => {
-          const hasGenre = movie.genres.some((genre: any) => genre.id === genreId)
-          expect(hasGenre).toBe(true)
-        })
-      } else {
-        // Currently expect 404 as enhanced endpoint doesn't exist
-        expect(page1Response.status).toBe(404)
-        expect(page2Response.status).toBe(404)
       }
     })
   })

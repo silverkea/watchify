@@ -20,6 +20,7 @@ export interface MovieGridProps {
   error?: string | null;
   hasMore?: boolean;
   selectedGenres?: number[];
+  hideGenreFilters?: boolean;
   viewMode?: 'grid' | 'list';
   onMovieClick?: (movie: Movie) => void;
   onLoadMore?: () => void;
@@ -43,6 +44,7 @@ export function MovieGrid({
   error = null,
   hasMore = false,
   selectedGenres = [],
+  hideGenreFilters = false,
   viewMode = 'grid',
   onMovieClick,
   onLoadMore,
@@ -95,7 +97,7 @@ export function MovieGrid({
     return (
       <div className={cn("space-y-6", className)}>
         {/* Genre Filter */}
-        {genres.length > 0 && (
+        {genres.length > 0 && !hideGenreFilters && (
           <GenreFilter
             genres={genres}
             selectedGenres={selectedGenres}
@@ -131,7 +133,7 @@ export function MovieGrid({
       {/* Controls Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         {/* Genre Filter */}
-        {genres.length > 0 && (
+        {genres.length > 0 && !hideGenreFilters && (
           <div className="flex-1">
             <GenreFilter
               genres={genres}

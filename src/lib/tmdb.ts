@@ -139,8 +139,7 @@ async function tmdbFetch(endpoint: string, params: Record<string, any> = {}): Pr
 // API functions
 export async function searchMovies(
   query: string,
-  page: number = 1,
-  genreId?: number
+  page: number = 1
 ): Promise<MovieSearchResponse> {
   if (!query.trim()) {
     throw new TMDBError('Search query is required', 400, 'INVALID_QUERY')
@@ -154,7 +153,7 @@ export async function searchMovies(
     throw new TMDBError('Invalid page number', 400, 'INVALID_PAGE')
   }
 
-  const cacheKey = getCacheKey('/search/movie', { query, page, with_genres: genreId })
+  const cacheKey = getCacheKey('/search/movie', { query, page })
   console.log('TMDB searchMovies - Cache key:', cacheKey);
   const cached = getFromCache<MovieSearchResponse>(cacheKey)
   if (cached) {
@@ -168,10 +167,6 @@ export async function searchMovies(
     query: query.trim(),
     page,
     include_adult: false
-  }
-
-  if (genreId) {
-    params.with_genres = genreId
   }
 
   const rawResponse = await tmdbFetch('/search/movie', params)

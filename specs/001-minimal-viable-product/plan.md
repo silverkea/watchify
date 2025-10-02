@@ -31,17 +31,18 @@
 - Phase 3-4: Implementation execution (manual or via tools)
 
 ## Summary
-**Primary Requirement**: Movie watch party platform with enhanced genre filtering that performs server-side searches instead of client-side filtering
+**Primary Requirement**: Movie watch party platform with enhanced genre filtering that is only available when viewing popular movies (no active search term)
 
 **Updated Genre Filtering Approach**: 
-- Genre filters trigger new API requests (not client-side filtering)
+- Genre filters only visible when no search term is active (popular movies view)
+- Genre filters trigger new API requests to filtered popular movies endpoint
 - Returns to page 1 when filters applied/modified  
-- Works with both search results and popular movies
 - Maintains filters during pagination
-- Requires popular movies API to support genre filtering
 - Multiple genres combined with AND logic
+- Search results show no genre filters - simplified search experience
+- Page title updates to reflect current mode: "Popular Movies", "[Genre] Movies", or "Search Results"
 
-**Technical Approach**: Next.js web application with TMDB API integration, stateless URL-encoded watch party data, enhanced genre filtering with server-side implementation
+**Technical Approach**: Next.js web application with TMDB API integration, stateless URL-encoded watch party data, simplified genre filtering only for popular movies (hidden during search)
 
 ## Technical Context
 **Language/Version**: TypeScript with Next.js 14+ and React 18+
@@ -251,12 +252,16 @@ stories/                  # Component stories
 **Genre Filtering Implementation Strategy**:
 - Update popular movies API contract to support genre parameter(s)
 - Update TMDB library to handle genre filtering for popular movies (use /discover/movie endpoint)
-- Modify frontend genre filter handlers to trigger new searches
-- Ensure pagination maintains active genre filters
-- Update existing search API to handle multiple genres (AND logic)
-- Create contract tests for genre filtering scenarios
-- Implement dynamic page title updates based on selected genres:
+- Modify frontend to hide genre filters when search term is active
+- Show genre filters only when viewing popular movies (no search term)
+- Ensure pagination maintains active genre filters for popular movies
+- Simplify search API - remove genre filtering complexity
+- Create contract tests for popular movies genre filtering scenarios
+- Implement dynamic page title updates based on current mode:
   - "Popular Movies" when no genres selected
+  - "[Genre] Movies" when genres selected in popular view
+  - "Search Results" when showing search results
+- Update UI to conditionally render genre filters based on search state
   - "[Genre] Movies" for single genre (e.g., "Action Movies")
   - "[Genre1], [Genre2] Movies" for multiple genres (e.g., "Action, Comedy Movies")
 - Update UI components to display contextual titles reflecting current filtering state
@@ -270,14 +275,17 @@ stories/                  # Component stories
 - Each contract → contract test task [P]
 - Each entity → model creation task [P] 
 - Each user story → integration test task
-- Genre filtering enhancement tasks:
+- Genre filtering simplification tasks:
   - Update popular movies API contract [P]
-  - Update TMDB library for genre filtering [P]
-  - Update frontend genre filter handlers
-  - Update pagination to maintain filters
-  - Create genre filtering contract tests [P]
-  - Implement dynamic page title updates based on genre selection [P]
-  - Update UI components to display contextual genre-based titles
+  - Update TMDB library for genre filtering [P] 
+  - Update frontend to hide genre filters during search
+  - Update UI to show genre filters only for popular movies
+  - Update pagination to maintain filters for popular movies
+  - Remove genre filtering from search API contract [P]
+  - Create genre filtering contract tests for popular movies only [P]
+  - Implement dynamic page title updates: "Popular Movies", "[Genre] Movies", "Search Results" [P]
+  - Update search result UI to show "Search Results" title
+  - Simplify search implementation - remove genre complexity
 - Implementation tasks to make tests pass
 
 **Ordering Strategy**:

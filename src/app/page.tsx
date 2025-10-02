@@ -35,10 +35,10 @@ export default function HomePage() {
   
   const router = useRouter();
 
-  // Generate dynamic page title based on selected genres
+  // Generate dynamic page title based on current mode
   const getPageTitle = useCallback(() => {
     if (searchQuery) {
-      return `Search Results for "${searchQuery}"`;
+      return 'Search Results';
     }
     
     if (selectedGenres.length === 0) {
@@ -147,10 +147,6 @@ export default function HomePage() {
         page: page.toString()
       });
 
-      if (selectedGenres.length > 0) {
-        params.append('genre', selectedGenres.join(','));
-      }
-
       console.log('Making API call to:', `/api/movies/search?${params}`);
       const response = await fetch(`/api/movies/search?${params}`);
       
@@ -181,10 +177,11 @@ export default function HomePage() {
     } finally {
       setLoading(false);
     }
-  }, [selectedGenres]);
+  }, []); // Remove selectedGenres dependency since search doesn't use genre filtering
 
   const handleSearch = useCallback((query: string) => {
     setSearchQuery(query);
+    setSelectedGenres([]); // Clear genre filters when starting a search
     setCurrentPage(1);
     performSearch(query, 1, false);
   }, [performSearch]);
@@ -266,42 +263,37 @@ export default function HomePage() {
   }, []);
 
   const handleGenreToggle = useCallback((genreId: number) => {
+    // Genre filtering is not available during search mode
+    if (searchQuery) {
+      return;
+    }
+    
     setSelectedGenres(prev => {
       const newGenres = prev.includes(genreId)
         ? prev.filter(id => id !== genreId)
         : [...prev, genreId];
       
-      // Always trigger a new search - either search results or popular movies
       // Reset to page 1 when filters change
       setCurrentPage(1);
       setHasMore(false);
       
-      // Trigger search immediately with new genres
-      if (searchQuery) {
-        // Re-search with new genre filters for search results
-        performSearch(searchQuery, 1, false);
-      } else {
-        // Load filtered popular movies when no search query
-        loadPopularMoviesWithGenres(newGenres, 1);
-      }
+      // Load filtered popular movies
+      loadPopularMoviesWithGenres(newGenres, 1);
       
       return newGenres;
     });
-  }, [searchQuery, performSearch, loadPopularMoviesWithGenres]);
+  }, [searchQuery, loadPopularMoviesWithGenres]);
 
   const handleGenresClear = useCallback(() => {
-    setSelectedGenres([]);
-    
-    // Re-search without genre filters if there's a search query
+    // Genre filtering is not available during search mode
     if (searchQuery) {
-      setTimeout(() => {
-        performSearch(searchQuery, 1, false);
-      }, 0);
-    } else {
-      // Load popular movies without genre filters
-      loadPopularMoviesWithGenres([], 1);
+      return;
     }
-  }, [searchQuery, performSearch, loadPopularMoviesWithGenres]);
+    
+    setSelectedGenres([]);
+    // Load popular movies without genre filters
+    loadPopularMoviesWithGenres([], 1);
+  }, [searchQuery, loadPopularMoviesWithGenres]);
 
   return (
     <main className="min-h-screen bg-background">
@@ -382,6 +374,7 @@ export default function HomePage() {
             error={error}
             hasMore={hasMore}
             selectedGenres={selectedGenres}
+            hideGenreFilters={Boolean(searchQuery)} // Hide genre filters when searching
             onMovieClick={handleMovieClick}
             onLoadMore={handleLoadMore}
             onGenreToggle={handleGenreToggle}

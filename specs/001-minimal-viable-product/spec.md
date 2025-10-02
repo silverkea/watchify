@@ -29,19 +29,20 @@ A user wants to discover movies, select one they're interested in, and coordinat
 ### Acceptance Scenarios
 0. **Given** the user visits the home page without any search, **When** the page loads, **Then** they see "Popular Movies" displayed in a responsive grid as the default content
 1. **Given** the user is on the home page, **When** they search for "action movies", **Then** they see a responsive grid of action movies with posters, titles, release dates, and star ratings that adapts to their screen size
-2. **Given** the user sees the movie grid, **When** they apply a genre filter, **Then** the system performs a new search with the selected genre filters, returning to page 1 and displaying filtered results for the current search term (or popular movies if no search term)
+2. **Given** the user sees the movie grid without a search term, **When** they apply a genre filter, **Then** the system performs a new search with the selected genre filters, returning to page 1 and displaying filtered popular movies
 3. **Given** the user clicks on a movie from the grid, **When** the movie detail page loads, **Then** they see expanded information including synopsis and main actors
 4. **Given** the user is on a movie detail page, **When** they select a date and time for a watch party, **Then** they can create a watch party with those details
 5. **Given** the user has scheduled a watch party, **When** they access the watch party landing page, **Then** they see a countdown timer and all movie details
 6. **Given** the countdown timer reaches zero, **When** the time expires, **Then** the timer is replaced with "Watching Now" message, and after 4 hours shows "Complete"
 7. **Given** the user is on a watch party landing page, **When** they click the "Copy Link" button, **Then** a shareable URL is copied to their clipboard
 8. **Given** someone opens a shared watch party URL, **When** the page loads, **Then** they see the same movie details and countdown timer in their local timezone
-9. **Given** the user has performed a search, **When** they clear the search, **Then** they return to the "Popular Movies" default view
+9. **Given** the user has performed a search, **When** they clear the search, **Then** they return to the "Popular Movies" default view and genre filters become available again
 10. **Given** the user is viewing Popular Movies with no search term, **When** they select a genre filter, **Then** the system displays popular movies filtered by that genre, returning to page 1
-11. **Given** the user has both a search term and genre filters active, **When** they change or clear genre filters, **Then** the system performs a new search with the updated filters and returns to page 1
-12. **Given** the user is viewing filtered results, **When** they click "Load More", **Then** the system loads the next page while maintaining the current search term and genre filters
+11. **Given** the user has entered a search term, **When** they view the search interface, **Then** genre filters are hidden and unavailable until the search is cleared
+12. **Given** the user is viewing filtered popular movies, **When** they click "Load More", **Then** the system loads the next page while maintaining the current genre filters
 13. **Given** the user selects one or more genre filters, **When** viewing popular movies without a search term, **Then** the page title changes to display the selected genre name(s) followed by "Movies" (e.g., "Action Movies", "Action, Comedy Movies")
 14. **Given** the user has genre filters applied, **When** they clear all genre filters, **Then** the page title returns to "Popular Movies"
+15. **Given** the user has a search term active, **When** they view search results, **Then** the page title shows "Search Results" and genre filters are not visible
 
 ### Edge Cases
 - What happens when no movies match the search criteria?
@@ -59,15 +60,18 @@ A user wants to discover movies, select one they're interested in, and coordinat
 - **FR-001**: System MUST display "Popular Movies" as default homepage content when no search is active
 - **FR-002**: System MUST allow users to search for movies by title or keyword
 - **FR-003**: System MUST display movies in a responsive grid layout with poster image, title, release date, and star rating that adapts to different screen sizes
-- **FR-004**: System MUST provide genre filtering capability for the movie grid
+- **FR-004**: System MUST provide genre filtering capability for the movie grid when no search term is active
 - **FR-004a**: Genre filters MUST trigger new search requests instead of client-side filtering of current results
 - **FR-004b**: Genre filtering MUST return to page 1 and reset pagination when applied or modified
-- **FR-004c**: Genre filters MUST work with both search results and popular movies default view
+- **FR-004c**: Genre filters MUST only be available when viewing popular movies (no active search term)
 - **FR-004d**: Multiple genre filters MUST be combinable using logical AND operation
 - **FR-004e**: System MUST dynamically update page title to reflect selected genres when viewing popular movies without search term
 - **FR-004f**: Page title MUST display as "[Genre] Movies" for single genre selection (e.g., "Action Movies")
 - **FR-004g**: Page title MUST display as "[Genre1], [Genre2] Movies" for multiple genre selections (e.g., "Action, Comedy Movies")
 - **FR-004h**: Page title MUST return to "Popular Movies" when all genre filters are cleared
+- **FR-004i**: Genre filters MUST be hidden when user enters a search term
+- **FR-004j**: Genre filters MUST become visible again when user clears search term
+- **FR-004k**: Page title MUST display "Search Results" when showing search results
 - **FR-005**: System MUST display detailed movie information including synopsis and cast members when a movie is selected
 - **FR-006**: System MUST allow users to schedule watch parties using a calendar picker for date selection and dropdown menus for time selection
 - **FR-007**: System MUST generate a unique watch party landing page for each scheduled party

@@ -14,7 +14,6 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const query = searchParams.get('q')
     const pageParam = searchParams.get('page')
-    const genreParam = searchParams.get('genre')
     
     // Validate required query parameter
     if (!query || query.trim().length === 0) {
@@ -57,26 +56,9 @@ export async function GET(request: NextRequest) {
       page = parsedPage
     }
     
-    // Parse and validate genre parameter
-    let genreId: number | undefined
-    if (genreParam) {
-      const parsedGenre = parseInt(genreParam, 10)
-      if (isNaN(parsedGenre) || parsedGenre <= 0) {
-        return NextResponse.json(
-          {
-            error: 'Invalid genre ID',
-            message: 'Genre ID must be a positive integer',
-            code: 'INVALID_GENRE'
-          },
-          { status: 400 }
-        )
-      }
-      genreId = parsedGenre
-    }
-    
     // Perform the search
-    console.log('API Route - Search params:', { query: query.trim(), page, genreId });
-    const results: MovieSearchResponse = await searchMovies(query.trim(), page, genreId)
+    console.log('API Route - Search params:', { query: query.trim(), page });
+    const results: MovieSearchResponse = await searchMovies(query.trim(), page)
     console.log('API Route - Search results:', { 
       returnedPage: results.page, 
       totalPages: results.totalPages, 
