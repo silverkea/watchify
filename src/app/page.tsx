@@ -30,6 +30,7 @@ export default function HomePage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [lastSearchQuery, setLastSearchQuery] = useState(''); // Track last successful search
   
   const router = useRouter();
 
@@ -57,6 +58,10 @@ export default function HomePage() {
       setError(null);
       
       // For demo purposes, search for popular movies
+      const query = 'marvel'; // Set a default search query for trending
+      setSearchQuery(query);
+      setLastSearchQuery(query);
+      
       const response = await fetch('/api/movies/search?q=marvel&page=1');
       if (response.ok) {
         const data: SearchResponse = await response.json();
@@ -75,6 +80,7 @@ export default function HomePage() {
   };
 
   const performSearch = useCallback(async (query: string, page: number = 1, append: boolean = false) => {
+    console.log('performSearch called:', { query, page, append });
     try {
       setLoading(true);
       setError(null);
@@ -88,24 +94,32 @@ export default function HomePage() {
         params.append('genre', selectedGenres.join(','));
       }
 
+      console.log('Making API call to:', `/api/movies/search?${params}`);
       const response = await fetch(`/api/movies/search?${params}`);
       
       if (response.ok) {
         const data: SearchResponse = await response.json();
+        console.log('API response:', { page: data.page, totalPages: data.totalPages, resultsCount: data.results.length });
         
         if (append) {
-          setMovies(prev => [...prev, ...data.results]);
+          setMovies(prev => {
+            console.log('Appending movies:', { previousCount: prev.length, newCount: data.results.length });
+            return [...prev, ...data.results];
+          });
         } else {
           setMovies(data.results);
         }
         
         setHasMore(data.page < data.totalPages);
-        setCurrentPage(data.page);
+        setCurrentPage(page); // Use the requested page number, not the returned page
+        setLastSearchQuery(query); // Track the successful search query
+        console.log('Updated state:', { hasMore: data.page < data.totalPages, currentPage: page });
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Search failed');
       }
     } catch (err) {
+      console.error('Search error:', err);
       setError('Search failed. Please try again.');
     } finally {
       setLoading(false);
@@ -127,10 +141,18 @@ export default function HomePage() {
   }, []);
 
   const handleLoadMore = useCallback(() => {
-    if (searchQuery && hasMore && !loading) {
-      performSearch(searchQuery, currentPage + 1, true);
+    console.log('Load More clicked:', { lastSearchQuery, hasMore, loading, currentPage });
+    if (lastSearchQuery && hasMore && !loading) {
+      console.log('Calling performSearch with page:', currentPage + 1);
+      performSearch(lastSearchQuery, currentPage + 1, true);
+    } else {
+      console.log('Load More conditions not met:', { 
+        hasLastSearchQuery: !!lastSearchQuery, 
+        hasMore, 
+        isNotLoading: !loading 
+      });
     }
-  }, [searchQuery, hasMore, loading, currentPage, performSearch]);
+  }, [lastSearchQuery, hasMore, loading, currentPage, performSearch]);
 
   const handleMovieClick = useCallback((movie: Movie) => {
     router.push(`/movies/${movie.id}`);

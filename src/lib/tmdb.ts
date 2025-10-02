@@ -61,6 +61,7 @@ export class TMDBServiceUnavailableError extends TMDBError {
 // Cache utilities
 function getCacheKey(endpoint: string, params: Record<string, any> = {}): string {
   const paramString = Object.keys(params)
+    .filter(key => params[key] !== undefined && params[key] !== null)
     .sort()
     .map(key => `${key}=${params[key]}`)
     .join('&')
@@ -154,10 +155,14 @@ export async function searchMovies(
   }
 
   const cacheKey = getCacheKey('/search/movie', { query, page, with_genres: genreId })
+  console.log('TMDB searchMovies - Cache key:', cacheKey);
   const cached = getFromCache<MovieSearchResponse>(cacheKey)
   if (cached) {
+    console.log('TMDB searchMovies - Returning cached result for page:', page);
     return cached
   }
+  
+  console.log('TMDB searchMovies - Making fresh API call for page:', page);
 
   const params: Record<string, any> = {
     query: query.trim(),

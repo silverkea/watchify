@@ -75,7 +75,14 @@ export async function GET(request: NextRequest) {
     }
     
     // Perform the search
+    console.log('API Route - Search params:', { query: query.trim(), page, genreId });
     const results: MovieSearchResponse = await searchMovies(query.trim(), page, genreId)
+    console.log('API Route - Search results:', { 
+      returnedPage: results.page, 
+      totalPages: results.totalPages, 
+      resultsCount: results.results.length,
+      firstMovieTitle: results.results[0]?.title 
+    });
     
     // Return successful response
     return NextResponse.json(results, {
