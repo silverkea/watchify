@@ -149,14 +149,16 @@ export function CountdownTimer({
     return (
       <div className={cn(
         "relative p-6 rounded-lg",
-        "bg-gradient-to-br from-purple-900/50 to-pink-900/50",
-        "border border-purple-500/50",
-        "shadow-[0_0_30px_rgba(168,85,247,0.4)]",
+        // Light mode: darker gradient with better contrast
+        "bg-gradient-to-br from-slate-100 to-slate-200 dark:from-purple-900/50 dark:to-pink-900/50",
+        "border border-slate-300 dark:border-purple-500/50",
+        // Light mode: subtle shadow, dark mode: neon glow
+        "shadow-lg dark:shadow-[0_0_30px_rgba(168,85,247,0.4)]",
         className
       )}>
         {showIcon && (
           <div className="flex justify-center mb-4">
-            <Clock className="w-8 h-8 text-purple-400" />
+            <Clock className="w-8 h-8 text-slate-700 dark:text-purple-400" />
           </div>
         )}
         
@@ -171,13 +173,15 @@ export function CountdownTimer({
               <div className={cn(
                 "text-3xl font-mono font-bold",
                 "text-transparent bg-clip-text",
-                "bg-gradient-to-b from-purple-400 to-pink-400",
-                "drop-shadow-[0_0_10px_rgba(168,85,247,0.8)]"
+                // Light mode: dark blue to purple gradient, Dark mode: light purple to pink
+                "bg-gradient-to-b from-blue-600 to-purple-600 dark:from-purple-400 dark:to-pink-400",
+                // Light mode: no glow, Dark mode: neon glow
+                "dark:drop-shadow-[0_0_10px_rgba(168,85,247,0.8)]"
               )}>
                 {formatNumber(unit.value)}
               </div>
               {showLabels && (
-                <div className="text-xs text-purple-300 uppercase tracking-wide">
+                <div className="text-xs text-slate-600 dark:text-purple-300 uppercase tracking-wide">
                   {unit.label}
                 </div>
               )}
