@@ -308,18 +308,6 @@ export default function WatchPartyPage({ params }: WatchPartyPageProps) {
               </div>
             </div>
 
-            {/* Movie Overview */}
-            {movie?.overview && (
-              <div className="bg-card rounded-lg border p-6">
-                <h3 className="text-lg font-semibold text-foreground mb-3">
-                  About the Movie
-                </h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {movie.overview}
-                </p>
-              </div>
-            )}
-
             {/* Sharing Section */}
             <div className="bg-card rounded-lg border p-6 space-y-4">
               <h3 className="text-lg font-semibold text-foreground flex items-center">
@@ -358,6 +346,44 @@ export default function WatchPartyPage({ params }: WatchPartyPageProps) {
                 </p>
               )}
             </div>
+
+            {/* Movie Overview and Cast */}
+            {movie && (
+              <div className="bg-card rounded-lg border p-6 space-y-6">
+                <h3 className="text-lg font-semibold text-foreground mb-3">
+                  About the Movie
+                </h3>
+                
+                {movie.overview && (
+                  <div>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {movie.overview}
+                    </p>
+                  </div>
+                )}
+
+                {/* Cast Section */}
+                {movie.cast && movie.cast.length > 0 && (
+                  <div className="space-y-3">
+                    <h4 className="text-base font-semibold text-foreground">
+                      Cast
+                    </h4>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {movie.cast.slice(0, 6).map((castMember) => (
+                        <div key={castMember.id} className="space-y-2">
+                          <div className="text-sm font-medium text-foreground">
+                            {castMember.name}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            {castMember.character}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
