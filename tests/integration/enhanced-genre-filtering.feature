@@ -94,3 +94,32 @@ Feature: Enhanced Genre Filtering Behavior
     Then the new search should begin within 100ms
     And the loading state should be displayed
     And results should load within 2 seconds
+
+  @genre-filtering @dynamic-title
+  Scenario: Page title updates with single genre selection
+    Given the user sees "Popular Movies" as the page title
+    When the user selects the "Action" genre filter
+    Then the page title should change to "Action Movies"
+    And the title should remain "Action Movies" while browsing filtered results
+
+  @genre-filtering @dynamic-title @multiple-genres
+  Scenario: Page title updates with multiple genre selection
+    Given the user sees "Popular Movies" as the page title
+    When the user selects the "Action" genre filter
+    And the user selects the "Comedy" genre filter
+    Then the page title should change to "Action, Comedy Movies"
+
+  @genre-filtering @dynamic-title @clear-filters
+  Scenario: Page title resets when clearing genre filters
+    Given the user has "Action" genre filter active
+    And the page title shows "Action Movies"
+    When the user clears all genre filters
+    Then the page title should return to "Popular Movies"
+
+  @genre-filtering @dynamic-title @search-mode
+  Scenario: Page title remains search-focused when genre filters applied to search
+    Given the user has searched for "superhero"
+    And the search results are displayed
+    When the user selects the "Action" genre filter
+    Then the page title should remain search-focused (not change to "Action Movies")
+    And the genre filter should be applied to search results

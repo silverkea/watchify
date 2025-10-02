@@ -99,8 +99,6 @@ async function tmdbFetch(endpoint: string, params: Record<string, any> = {}): Pr
     }
   })
 
-  console.log('TMDB Fetch - Final URL:', url.toString());
-
   try {
     const response = await fetch(url.toString(), {
       headers: {
@@ -282,8 +280,7 @@ export async function getPopularMovies(
   const cacheKey = getCacheKey('/movie/popular', { page, genreIds: genreIds?.join(',') })
   console.log('TMDB getPopularMovies - Cache key:', cacheKey);
   
-  // Temporarily disable cache for genre-filtered requests to debug
-  const cached = genreIds && genreIds.length > 0 ? null : getFromCache<MovieSearchResponse>(cacheKey)
+  const cached = getFromCache<MovieSearchResponse>(cacheKey)
   if (cached) {
     console.log('TMDB getPopularMovies - Returning cached result for page:', page);
     return cached
@@ -303,11 +300,8 @@ export async function getPopularMovies(
     endpoint = '/discover/movie'
     params.with_genres = genreIds.join(',')
     params.sort_by = 'popularity.desc' // Maintain popularity sorting
-    console.log('TMDB getPopularMovies - Using discover endpoint with genres:', params.with_genres);
   }
 
-  console.log('TMDB getPopularMovies - Final params:', params);
-  console.log('TMDB getPopularMovies - Using endpoint:', endpoint);
   const rawResponse = await tmdbFetch(endpoint, params)
   const validatedResponse = TMDBMovieSearchResponseSchema.parse(rawResponse)
 

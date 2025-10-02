@@ -35,6 +35,34 @@ export default function HomePage() {
   
   const router = useRouter();
 
+  // Generate dynamic page title based on selected genres
+  const getPageTitle = useCallback(() => {
+    if (searchQuery) {
+      return `Search Results for "${searchQuery}"`;
+    }
+    
+    if (selectedGenres.length === 0) {
+      return 'Popular Movies';
+    }
+    
+    // Get genre names from selected genre IDs
+    const selectedGenreNames = selectedGenres
+      .map(genreId => genres.find(genre => genre.id === genreId)?.name)
+      .filter(Boolean); // Remove undefined values
+    
+    if (selectedGenreNames.length === 0) {
+      return 'Popular Movies'; // Fallback if genres not loaded yet
+    }
+    
+    return `${selectedGenreNames.join(', ')} Movies`;
+  }, [searchQuery, selectedGenres, genres]);
+
+  // Update document title when page title changes
+  useEffect(() => {
+    const pageTitle = getPageTitle();
+    document.title = `${pageTitle} - Watchify`;
+  }, [getPageTitle]);
+
   // Load genres on component mount
   useEffect(() => {
     loadGenres();
@@ -215,12 +243,10 @@ export default function HomePage() {
           page: data.page, 
           totalPages: data.totalPages, 
           resultsCount: data.results.length,
-          genreIds,
-          firstThreeMovies: data.results.slice(0, 3).map(m => ({ id: m.id, title: m.title }))
+          genreIds
         });
         
         if (page === 1) {
-          console.log('Setting movies to new data:', data.results.length, 'movies');
           setMovies(data.results);
         } else {
           setMovies(prev => [...prev, ...data.results]);
@@ -245,8 +271,6 @@ export default function HomePage() {
         ? prev.filter(id => id !== genreId)
         : [...prev, genreId];
       
-      console.log('Genre toggle - new genres:', newGenres, 'for genreId:', genreId);
-      
       // Always trigger a new search - either search results or popular movies
       // Reset to page 1 when filters change
       setCurrentPage(1);
@@ -255,11 +279,9 @@ export default function HomePage() {
       // Trigger search immediately with new genres
       if (searchQuery) {
         // Re-search with new genre filters for search results
-        console.log('Re-searching with genres:', newGenres);
         performSearch(searchQuery, 1, false);
       } else {
         // Load filtered popular movies when no search query
-        console.log('Loading popular movies with genres:', newGenres);
         loadPopularMoviesWithGenres(newGenres, 1);
       }
       
@@ -341,19 +363,11 @@ export default function HomePage() {
                   Search Results for "{searchQuery}"
                 </h2>
               </>
-            ) : isNowPlayingMode ? (
-              <>
-                <TrendingUp className="w-5 h-5 text-purple-600" />
-                <h2 className="text-2xl font-semibold text-foreground">
-                  Popular Movies
-                </h2>
-                <Sparkles className="w-4 h-4 text-yellow-500" />
-              </>
             ) : (
               <>
                 <TrendingUp className="w-5 h-5 text-purple-600" />
                 <h2 className="text-2xl font-semibold text-foreground">
-                  Movies
+                  {getPageTitle()}
                 </h2>
                 <Sparkles className="w-4 h-4 text-yellow-500" />
               </>

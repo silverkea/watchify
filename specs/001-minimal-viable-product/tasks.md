@@ -117,6 +117,7 @@
 - [x] T041 Watch party page in src/app/watch-party/[id]/page.tsx
 - [ ] T064 Enhanced GenreFilter component: Update to trigger new searches instead of client-side filtering in src/features/movie-search/components/GenreFilter.tsx
 - [ ] T065 Enhanced Home page: Update genre filter handlers to perform server-side searches and reset pagination in src/app/page.tsx
+- [ ] T069 [P] Dynamic page title updates: Implement genre-based title display logic in src/app/page.tsx (e.g., "Action Movies", "Action, Comedy Movies")
 
 ## Phase 3.9: Integration & Polish
 - [x] T042 [P] Theme provider setup in src/app/providers/theme-provider.tsx
@@ -128,6 +129,7 @@
 - [x] T048 Execute quickstart.md user journey validation with Playwright
 - [ ] T066 [P] Unit tests for enhanced genre filtering logic in tests/unit/genre-filtering.test.ts
 - [ ] T067 [P] Update popular-movies-api.md contract documentation
+- [ ] T070 [P] Update enhanced-genre-filtering.feature to include dynamic title test scenarios
 - [ ] T068 Final validation: Genre filtering triggers new searches, maintains filters during pagination, works with both search and popular movies
 - [x] T049 [P] Performance testing with Playwright: <2 second search response time
 - [x] T050 [P] Cross-browser testing: Chrome, Firefox, Safari with Playwright
@@ -245,4 +247,4 @@ Task: "Mobile responsiveness testing with Playwright viewports"
 - Use `npx playwright show-report` to view detailed test results and traces
 
 ---
-*Ready for execution - 55 numbered tasks with comprehensive Playwright E2E automation*
+*Ready for execution - 57 numbered tasks with comprehensive Playwright E2E automation*

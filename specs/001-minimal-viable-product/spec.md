@@ -40,6 +40,8 @@ A user wants to discover movies, select one they're interested in, and coordinat
 10. **Given** the user is viewing Popular Movies with no search term, **When** they select a genre filter, **Then** the system displays popular movies filtered by that genre, returning to page 1
 11. **Given** the user has both a search term and genre filters active, **When** they change or clear genre filters, **Then** the system performs a new search with the updated filters and returns to page 1
 12. **Given** the user is viewing filtered results, **When** they click "Load More", **Then** the system loads the next page while maintaining the current search term and genre filters
+13. **Given** the user selects one or more genre filters, **When** viewing popular movies without a search term, **Then** the page title changes to display the selected genre name(s) followed by "Movies" (e.g., "Action Movies", "Action, Comedy Movies")
+14. **Given** the user has genre filters applied, **When** they clear all genre filters, **Then** the page title returns to "Popular Movies"
 
 ### Edge Cases
 - What happens when no movies match the search criteria?
@@ -62,6 +64,10 @@ A user wants to discover movies, select one they're interested in, and coordinat
 - **FR-004b**: Genre filtering MUST return to page 1 and reset pagination when applied or modified
 - **FR-004c**: Genre filters MUST work with both search results and popular movies default view
 - **FR-004d**: Multiple genre filters MUST be combinable using logical AND operation
+- **FR-004e**: System MUST dynamically update page title to reflect selected genres when viewing popular movies without search term
+- **FR-004f**: Page title MUST display as "[Genre] Movies" for single genre selection (e.g., "Action Movies")
+- **FR-004g**: Page title MUST display as "[Genre1], [Genre2] Movies" for multiple genre selections (e.g., "Action, Comedy Movies")
+- **FR-004h**: Page title MUST return to "Popular Movies" when all genre filters are cleared
 - **FR-005**: System MUST display detailed movie information including synopsis and cast members when a movie is selected
 - **FR-006**: System MUST allow users to schedule watch parties using a calendar picker for date selection and dropdown menus for time selection
 - **FR-007**: System MUST generate a unique watch party landing page for each scheduled party

@@ -250,11 +250,16 @@ stories/                  # Component stories
 
 **Genre Filtering Implementation Strategy**:
 - Update popular movies API contract to support genre parameter(s)
-- Update TMDB library to handle genre filtering for popular movies
+- Update TMDB library to handle genre filtering for popular movies (use /discover/movie endpoint)
 - Modify frontend genre filter handlers to trigger new searches
 - Ensure pagination maintains active genre filters
 - Update existing search API to handle multiple genres (AND logic)
 - Create contract tests for genre filtering scenarios
+- Implement dynamic page title updates based on selected genres:
+  - "Popular Movies" when no genres selected
+  - "[Genre] Movies" for single genre (e.g., "Action Movies")
+  - "[Genre1], [Genre2] Movies" for multiple genres (e.g., "Action, Comedy Movies")
+- Update UI components to display contextual titles reflecting current filtering state
 
 ## Phase 2: Task Planning Approach
 *This section describes what the /tasks command will do - DO NOT execute during /plan*
@@ -271,6 +276,8 @@ stories/                  # Component stories
   - Update frontend genre filter handlers
   - Update pagination to maintain filters
   - Create genre filtering contract tests [P]
+  - Implement dynamic page title updates based on genre selection [P]
+  - Update UI components to display contextual genre-based titles
 - Implementation tasks to make tests pass
 
 **Ordering Strategy**:
