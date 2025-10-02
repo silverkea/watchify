@@ -21,6 +21,7 @@ interface SearchResponse {
 }
 
 export default function HomePage() {
+  const [isClient, setIsClient] = useState(false);
   const [movies, setMovies] = useState<Movie[]>([]);
   const [genres, setGenres] = useState<Genre[]>([]);
   const [loading, setLoading] = useState(false);
@@ -57,17 +58,26 @@ export default function HomePage() {
     return `${selectedGenreNames.join(', ')} Movies`;
   }, [searchQuery, selectedGenres, genres]);
 
-  // Update document title when page title changes
+  // Detect client-side to prevent hydration issues
   useEffect(() => {
-    const pageTitle = getPageTitle();
-    document.title = `${pageTitle} - Watchify`;
-  }, [getPageTitle]);
-
-  // Load genres on component mount
-  useEffect(() => {
-    loadGenres();
-    loadTrendingMovies(); // Load trending movies as default
+    setIsClient(true);
   }, []);
+
+  // Update document title when page title changes (client-side only)
+  useEffect(() => {
+    if (isClient) {
+      const pageTitle = getPageTitle();
+      document.title = `${pageTitle} - Watchify`;
+    }
+  }, [getPageTitle, isClient]);
+
+  // Load genres and movies on component mount (client-side only)
+  useEffect(() => {
+    if (isClient) {
+      loadGenres();
+      loadTrendingMovies(); // Load trending movies as default
+    }
+  }, [isClient]);
 
   const loadGenres = async () => {
     try {
@@ -347,7 +357,7 @@ export default function HomePage() {
       <Header />
 
       {/* Hero Section */}
-      {!searchQuery && isInitialLoad && (
+      {!searchQuery && (
         <section className="py-16 px-4 text-center">
           <div className="container mx-auto max-w-4xl">
             <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
@@ -372,7 +382,6 @@ export default function HomePage() {
             onClear={handleClearSearch}
             placeholder="Search for movies to start a watch party..."
             className="w-full"
-            autoFocus={!isInitialLoad}
           />
         </div>
       </section>
@@ -400,22 +409,33 @@ export default function HomePage() {
             )}
           </div>
 
-          {/* Movie Grid */}
-          <MovieGrid
-            movies={movies}
-            genres={genres}
-            loading={loading}
-            error={error}
-            hasMore={hasMore}
-            selectedGenres={selectedGenres}
-            hideGenreFilters={Boolean(searchQuery)} // Hide genre filters when searching
-            onMovieClick={handleMovieClick}
-            onLoadMore={handleLoadMore}
-            onGenreToggle={handleGenreToggle}
-            onGenresClear={handleGenresClear}
-            gridCols={{ sm: 2, md: 3, lg: 5, xl: 5 }}
-            className="max-w-7xl mx-auto"
-          />
+          {/* Movie Grid - Only render after client hydration */}
+          {isClient && (
+            <MovieGrid
+              movies={movies}
+              genres={genres}
+              loading={loading}
+              error={error}
+              hasMore={hasMore}
+              selectedGenres={selectedGenres}
+              hideGenreFilters={Boolean(searchQuery)} // Hide genre filters when searching
+              onMovieClick={handleMovieClick}
+              onLoadMore={handleLoadMore}
+              onGenreToggle={handleGenreToggle}
+              onGenresClear={handleGenresClear}
+              gridCols={{ sm: 2, md: 3, lg: 5, xl: 5 }}
+              className="max-w-7xl mx-auto"
+            />
+          )}
+          
+          {/* Loading placeholder for server-side rendering */}
+          {!isClient && (
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center py-8">
+                <div className="text-muted-foreground">Loading popular movies...</div>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 

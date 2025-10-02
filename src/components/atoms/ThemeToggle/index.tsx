@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import { Sun, Moon, Monitor } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -22,6 +22,33 @@ const ThemeToggle = React.forwardRef<HTMLButtonElement, ThemeToggleProps>(
     const { theme, setTheme } = useTheme();
     const [isTransitioning, setIsTransitioning] = useState(false);
     const [lastClickTime, setLastClickTime] = useState(0);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+      setMounted(true);
+    }, []);
+
+    // Prevent hydration errors by not rendering until mounted
+    if (!mounted) {
+      return (
+        <button
+          ref={ref}
+          type="button"
+          className={cn(
+            'inline-flex items-center justify-center',
+            'rounded-lg border',
+            'h-10 w-10 p-2',
+            'border-gray-300 bg-white',
+            'dark:border-gray-600 dark:bg-gray-800',
+            className
+          )}
+          disabled
+          {...props}
+        >
+          <Sun className="transition-transform duration-200" />
+        </button>
+      );
+    }
 
     const currentTheme = (theme as Theme) || 'system';
 
