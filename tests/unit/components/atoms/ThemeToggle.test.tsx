@@ -1,60 +1,189 @@
-import React from 'react';
+import React from 'react';import React from 'react';import React from 'react';import React from 'react';
+
 import { render, screen, fireEvent } from '@testing-library/react';
-import { ThemeToggle } from '@/components/atoms/ThemeToggle/index';
 
-describe('ThemeToggle Atom', () => {
-  describe('Rendering', () => {
-    it('should render with default props', () => {
-      render(<ThemeToggle />);
-      const button = screen.getByRole('button', { name: /switch to light theme/i });
-      expect(button).toBeInTheDocument();
-    });
+import { ThemeToggle } from '@/components/atoms/ThemeToggle';import { render, screen, fireEvent } from '@testing-library/react';
 
-    it('should show sun icon for light theme', () => {
-      render(<ThemeToggle theme="light" />);
-      const button = screen.getByRole('button');
-      expect(button).toHaveAttribute('aria-label', 'Switch to dark theme');
-      // Sun icon should be visible
-      expect(button.querySelector('[data-icon="sun"]')).toBeInTheDocument();
-    });
 
-    it('should show moon icon for dark theme', () => {
-      render(<ThemeToggle theme="dark" />);
-      const button = screen.getByRole('button');
-      expect(button).toHaveAttribute('aria-label', 'Switch to system theme');
-      // Moon icon should be visible
-      expect(button.querySelector('[data-icon="moon"]')).toBeInTheDocument();
-    });
+
+const mockSetTheme = jest.fn();import { ThemeToggle } from '@/components/atoms/ThemeToggle';import { render, screen, fireEvent } from '@testing-library/react';import { render, screen, fireEvent } from '@testing-library/react';
+
+jest.mock('next-themes', () => ({
+
+  useTheme: () => ({
+
+    theme: 'light',
+
+    setTheme: mockSetTheme,// Mock next-themesimport { ThemeToggle } from '@/components/atoms/ThemeToggle';import { ThemeToggle } from '@/components/atoms/ThemeToggle/index';
+
+    resolvedTheme: 'light'
+
+  }),const mockSetTheme = jest.fn();
+
+}));
+
+jest.mock('next-themes', () => ({
+
+describe('ThemeToggle Component', () => {
+
+  beforeEach(() => {  useTheme: () => ({
+
+    jest.clearAllMocks();
+
+  });    theme: 'light',// Mock next-themesdescribe('ThemeToggle Atom', () => {
+
+
+
+  it('should render theme toggle button', () => {    setTheme: mockSetTheme,
+
+    render(<ThemeToggle />);
+
+    const button = screen.getByRole('button');    resolvedTheme: 'light'const mockSetTheme = jest.fn();  describe('Rendering', () => {
+
+    expect(button).toBeInTheDocument();
+
+  });  }),
+
+
+
+  it('should call setTheme when clicked', () => {}));const mockUseTheme = {    it('should render with default props', () => {
+
+    render(<ThemeToggle />);
+
+    const button = screen.getByRole('button');
+
+    fireEvent.click(button);
+
+    expect(mockSetTheme).toHaveBeenCalled();describe('ThemeToggle Component', () => {  theme: 'light',      render(<ThemeToggle />);
+
+  });
+
+});  beforeEach(() => {
+
+    jest.clearAllMocks();  setTheme: mockSetTheme,      const button = screen.getByRole('button', { name: /switch to light theme/i });
+
+  });
+
+  resolvedTheme: 'light'      expect(button).toBeInTheDocument();
+
+  it('should render theme toggle button', () => {
+
+    render(<ThemeToggle />);};    });
+
+    
+
+    const button = screen.getByRole('button');
+
+    expect(button).toBeInTheDocument();
+
+  });jest.mock('next-themes', () => ({    it('should show sun icon for light theme', () => {
+
+
+
+  it('should call setTheme when clicked', () => {  useTheme: () => mockUseTheme,      render(<ThemeToggle theme="light" />);
+
+    render(<ThemeToggle />);
+
+      ThemeProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>      const button = screen.getByRole('button');
+
+    const button = screen.getByRole('button');
+
+    fireEvent.click(button);}));      expect(button).toHaveAttribute('aria-label', 'Switch to dark theme');
+
+    
+
+    expect(mockSetTheme).toHaveBeenCalled();      // Sun icon should be visible
+
+  });
+
+describe('ThemeToggle Component', () => {      expect(button.querySelector('[data-icon="sun"]')).toBeInTheDocument();
+
+  it('should handle keyboard navigation', () => {
+
+    render(<ThemeToggle />);  beforeEach(() => {    });
+
+    
+
+    const button = screen.getByRole('button');    jest.clearAllMocks();
+
+    fireEvent.keyDown(button, { key: 'Enter' });
+
+      });    it('should show moon icon for dark theme', () => {
+
+    expect(mockSetTheme).toHaveBeenCalled();
+
+  });      render(<ThemeToggle theme="dark" />);
+
+});
+  it('should render theme toggle button', () => {      const button = screen.getByRole('button');
+
+    render(<ThemeToggle />);      expect(button).toHaveAttribute('aria-label', 'Switch to system theme');
+
+          // Moon icon should be visible
+
+    const button = screen.getByRole('button');      expect(button.querySelector('[data-icon="moon"]')).toBeInTheDocument();
+
+    expect(button).toBeInTheDocument();    });
+
+  });
 
     it('should show system icon for system theme', () => {
-      render(<ThemeToggle theme="system" />);
-      const button = screen.getByRole('button');
-      expect(button).toHaveAttribute('aria-label', 'Switch to light theme');
-      // System icon should be visible
-      expect(button.querySelector('[data-icon="system"]')).toBeInTheDocument();
-    });
 
-    it('should render with different sizes', () => {
+  it('should show correct icon for light theme', () => {      render(<ThemeToggle theme="system" />);
+
+    mockUseTheme.theme = 'light';      const button = screen.getByRole('button');
+
+    render(<ThemeToggle />);      expect(button).toHaveAttribute('aria-label', 'Switch to light theme');
+
+          // System icon should be visible
+
+    const button = screen.getByRole('button');      expect(button.querySelector('[data-icon="system"]')).toBeInTheDocument();
+
+    expect(button).toBeInTheDocument();    });
+
+    expect(button.querySelector('svg')).toBeInTheDocument();
+
+  });    it('should render with different sizes', () => {
+
       const { rerender } = render(<ThemeToggle size="sm" />);
-      expect(screen.getByRole('button')).toHaveClass('h-8 w-8');
 
-      rerender(<ThemeToggle size="md" />);
-      expect(screen.getByRole('button')).toHaveClass('h-10 w-10');
+  it('should call setTheme when clicked', () => {      expect(screen.getByRole('button')).toHaveClass('h-8 w-8');
 
-      rerender(<ThemeToggle size="lg" />);
-      expect(screen.getByRole('button')).toHaveClass('h-12 w-12');
-    });
+    mockUseTheme.theme = 'light';
+
+    render(<ThemeToggle />);      rerender(<ThemeToggle size="md" />);
+
+          expect(screen.getByRole('button')).toHaveClass('h-10 w-10');
+
+    const button = screen.getByRole('button');
+
+    fireEvent.click(button);      rerender(<ThemeToggle size="lg" />);
+
+          expect(screen.getByRole('button')).toHaveClass('h-12 w-12');
+
+    expect(mockSetTheme).toHaveBeenCalled();    });
+
+  });
 
     it('should render with different variants', () => {
-      const { rerender } = render(<ThemeToggle variant="default" />);
-      expect(screen.getByRole('button')).toHaveClass('border-gray-300');
 
-      rerender(<ThemeToggle variant="outline" />);
-      expect(screen.getByRole('button')).toHaveClass('border-2');
+  it('should handle keyboard navigation', () => {      const { rerender } = render(<ThemeToggle variant="default" />);
 
-      rerender(<ThemeToggle variant="ghost" />);
-      expect(screen.getByRole('button')).toHaveClass('border-transparent');
+    render(<ThemeToggle />);      expect(screen.getByRole('button')).toHaveClass('border-gray-300');
 
+    
+
+    const button = screen.getByRole('button');      rerender(<ThemeToggle variant="outline" />);
+
+    fireEvent.keyDown(button, { key: 'Enter' });      expect(screen.getByRole('button')).toHaveClass('border-2');
+
+    
+
+    expect(mockSetTheme).toHaveBeenCalled();      rerender(<ThemeToggle variant="ghost" />);
+
+  });      expect(screen.getByRole('button')).toHaveClass('border-transparent');
+
+});
       rerender(<ThemeToggle variant="neon" />);
       expect(screen.getByRole('button')).toHaveClass('border-purple-500', 'shadow-purple-500/25');
     });

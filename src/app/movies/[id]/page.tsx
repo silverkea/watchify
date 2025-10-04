@@ -276,6 +276,7 @@ export default function MovieDetailsPage({ params }: MovieDetailsPageProps) {
                 variant="primary"
                 onClick={() => setShowScheduleModal(true)}
                 disabled={isCreatingParty}
+                data-testid="schedule-watch-party-button"
               >
                 <Calendar className="w-4 h-4 mr-2" />
                 Schedule Watch Party
@@ -318,7 +319,7 @@ export default function MovieDetailsPage({ params }: MovieDetailsPageProps) {
 
       {/* Watch Party Creation Modal */}
       {showScheduleModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" data-testid="watch-party-modal">
           <div className="bg-card rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 space-y-6">
               <div className="flex items-center justify-between">
@@ -330,6 +331,7 @@ export default function MovieDetailsPage({ params }: MovieDetailsPageProps) {
                   size="sm"
                   onClick={() => setShowScheduleModal(false)}
                   className="p-2"
+                  data-testid="modal-close-button"
                 >
                   ×
                 </Button>
@@ -375,6 +377,7 @@ export default function MovieDetailsPage({ params }: MovieDetailsPageProps) {
                   variant="ghost"
                   onClick={() => setShowScheduleModal(false)}
                   className="flex-1"
+                  data-testid="cancel-watch-party-button"
                 >
                   Cancel
                 </Button>
@@ -383,6 +386,7 @@ export default function MovieDetailsPage({ params }: MovieDetailsPageProps) {
                   onClick={handleCreateWatchParty}
                   disabled={!selectedDateTime || !!dateTimeError || isCreatingParty}
                   className="flex-1"
+                  data-testid="create-watch-party-button"
                 >
                   {isCreatingParty ? (
                     <>Creating...</>

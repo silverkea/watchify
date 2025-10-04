@@ -1,83 +1,263 @@
-/**
- * Unit Tests for Performance Utilities
- * Tests for lazy loading, intersection observer, and performance optimization helpers
- */
+import { renderHook } from '@testing-library/react';import { renderHook } from '@testing-library/react';import { renderHook } from '@testing-library/react';/**
 
-import { renderHook, act } from '@testing-library/react';
-import { useIntersectionObserver, useDebounce, useThrottle, PerformanceMonitor } from '@/lib/performance';
+import { useIntersectionObserver, preloadImages, trackWebVitals } from '@/lib/performance';
 
-// Mock IntersectionObserver
-const mockIntersectionObserver = jest.fn();
-mockIntersectionObserver.mockReturnValue({
-  observe: () => null,
-  unobserve: () => null,
-  disconnect: () => null
-});
-window.IntersectionObserver = mockIntersectionObserver;
+import { useIntersectionObserver, preloadImages, trackWebVitals } from '@/lib/performance';
+
+const mockObserve = jest.fn();
+
+const mockUnobserve = jest.fn();import { useIntersectionObserver, preloadImages, trackWebVitals } from '@/lib/performance'; * Unit Tests for Performance Utilities
+
+
+
+beforeAll(() => {// Mock IntersectionObserver
+
+  global.IntersectionObserver = jest.fn().mockImplementation(() => ({
+
+    observe: mockObserve,const mockObserve = jest.fn(); * Tests for lazy loading, intersection observer, and performance optimization helpers
+
+    unobserve: mockUnobserve,
+
+    disconnect: jest.fn(),const mockUnobserve = jest.fn();
+
+  }));
+
+});const mockDisconnect = jest.fn();// Mock IntersectionObserver */
+
+
 
 describe('Performance Utilities', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-    jest.useFakeTimers();
-  });
-
-  afterEach(() => {
-    jest.useRealTimers();
-  });
 
   describe('useIntersectionObserver', () => {
-    it('should initialize with correct default values', () => {
-      const { result } = renderHook(() => useIntersectionObserver());
-      
-      expect(result.current.isIntersecting).toBe(false);
-      expect(result.current.hasIntersected).toBe(false);
-      expect(result.current.ref).toBeDefined();
-    });
 
-    it('should create observer with custom options', () => {
-      const options = { threshold: 0.5, rootMargin: '100px' };
-      renderHook(() => useIntersectionObserver(options));
-      
-      expect(mockIntersectionObserver).toHaveBeenCalledWith(
-        expect.any(Function),
-        expect.objectContaining({
-          threshold: 0.5,
-          rootMargin: '100px'
-        })
-      );
-    });
+    it('should initialize with correct default values', () => {beforeAll(() => {const mockIntersectionObserver = jest.fn();
+
+      const { result } = renderHook(() => useIntersectionObserver());
+
+      expect(result.current.isIntersecting).toBe(false);  global.IntersectionObserver = jest.fn().mockImplementation(() => ({
+
+      expect(result.current.hasIntersected).toBe(false);
+
+    });    observe: mockObserve,const mockObserve = jest.fn();import { renderHook, act } from '@testing-library/react';
+
   });
 
-  describe('useDebounce', () => {
-    it('should return initial value immediately', () => {
+    unobserve: mockUnobserve,
+
+  describe('preloadImages', () => {
+
+    it('should handle preloading images', async () => {    disconnect: mockDisconnect,const mockUnobserve = jest.fn();import { useIntersectionObserver, useDebounce, useThrottle, PerformanceMonitor } from '@/lib/performance';
+
+      global.Image = jest.fn().mockImplementation(() => ({
+
+        onload: null,  }));
+
+        onerror: null,
+
+        src: ''});const mockDisconnect = jest.fn();
+
+      }));
+
+
+
+      const sources = ['image1.jpg'];
+
+      const promise = preloadImages(sources);describe('Performance Utilities', () => {// Mock IntersectionObserver
+
+      await expect(promise).resolves.toBeDefined();
+
+    });  describe('useIntersectionObserver', () => {
+
+  });
+
+    it('should initialize with correct default values', () => {beforeAll(() => {const mockIntersectionObserver = jest.fn();
+
+  describe('trackWebVitals', () => {
+
+    it('should not throw when called', () => {      const { result } = renderHook(() => useIntersectionObserver());
+
+      expect(() => trackWebVitals()).not.toThrow();
+
+    });        global.IntersectionObserver = jest.fn().mockImplementation((callback) => {mockIntersectionObserver.mockReturnValue({
+
+  });
+
+});      expect(result.current.isIntersecting).toBe(false);
+
+      expect(result.current.hasIntersected).toBe(false);    mockIntersectionObserver(callback, { threshold: 0.1 });  observe: () => null,
+
+    });
+
+  });    return {  unobserve: () => null,
+
+
+
+  describe('preloadImages', () => {      observe: mockObserve,  disconnect: () => null
+
+    beforeEach(() => {
+
+      global.Image = jest.fn().mockImplementation(() => ({      unobserve: mockUnobserve,});
+
+        onload: null,
+
+        onerror: null,      disconnect: mockDisconnect,window.IntersectionObserver = mockIntersectionObserver;
+
+        src: ''
+
+      }));    };
+
+    });
+
+  });describe('Performance Utilities', () => {
+
+    it('should handle preloading images', async () => {
+
+      const sources = ['image1.jpg', 'image2.jpg'];});  beforeEach(() => {
+
+      const mockImage = {
+
+        src: '',    jest.clearAllMocks();
+
+        onload: null as any,
+
+        onerror: null as any,describe('Performance Utilities', () => {    jest.useFakeTimers();
+
+      };
+
+        describe('useIntersectionObserver', () => {  });
+
+      global.Image = jest.fn().mockImplementation(() => mockImage);
+
+          it('should initialize with correct default values', () => {
+
+      const promise = preloadImages(sources);
+
+            const { result } = renderHook(() => useIntersectionObserver());  afterEach(() => {
+
+      // Simulate successful image load
+
+      if (mockImage.onload) mockImage.onload();          jest.useRealTimers();
+
+      
+
+      await expect(promise).resolves.toBeDefined();      expect(result.current.isIntersecting).toBe(false);  });
+
+    });
+
+  });      expect(result.current.hasIntersected).toBe(false);
+
+
+
+  describe('trackWebVitals', () => {    });  describe('useIntersectionObserver', () => {
+
+    it('should not throw when called', () => {
+
+      expect(() => trackWebVitals()).not.toThrow();    it('should initialize with correct default values', () => {
+
+    });
+
+  });    it('should create observer with custom options', () => {      const { result } = renderHook(() => useIntersectionObserver());
+
+});
+      const options = { threshold: 0.5, rootMargin: '100px' };      
+
+      renderHook(() => useIntersectionObserver(options));      expect(result.current.isIntersecting).toBe(false);
+
+            expect(result.current.hasIntersected).toBe(false);
+
+      expect(global.IntersectionObserver).toHaveBeenCalledWith(      expect(result.current.ref).toBeDefined();
+
+        expect.any(Function),    });
+
+        expect.objectContaining({
+
+          threshold: 0.5,    it('should create observer with custom options', () => {
+
+          rootMargin: '100px'      const options = { threshold: 0.5, rootMargin: '100px' };
+
+        })      renderHook(() => useIntersectionObserver(options));
+
+      );      
+
+    });      expect(mockIntersectionObserver).toHaveBeenCalledWith(
+
+  });        expect.any(Function),
+
+        expect.objectContaining({
+
+  describe('preloadImages', () => {          threshold: 0.5,
+
+    beforeEach(() => {          rootMargin: '100px'
+
+      // Mock Image constructor        })
+
+      global.Image = jest.fn().mockImplementation(() => ({      );
+
+        onload: null,    });
+
+        onerror: null,  });
+
+        src: ''
+
+      }));  describe('useDebounce', () => {
+
+    });    it('should return initial value immediately', () => {
+
       const { result } = renderHook(() => useDebounce('initial', 500));
-      
-      expect(result.current).toBe('initial');
-    });
 
-    it('should debounce value changes', () => {
-      let value = 'initial';
-      const { result, rerender } = renderHook(() => useDebounce(value, 500));
-      
-      expect(result.current).toBe('initial');
-      
-      // Change value
-      value = 'updated';
-      rerender();
-      
-      // Should still be initial before delay
-      expect(result.current).toBe('initial');
-      
-      // Fast forward time
-      act(() => {
-        jest.advanceTimersByTime(500);
+    it('should preload multiple images', async () => {      
+
+      const sources = ['image1.jpg', 'image2.jpg'];      expect(result.current).toBe('initial');
+
+      const mockImage = {    });
+
+        src: '',
+
+        onload: null as any,    it('should debounce value changes', () => {
+
+        onerror: null as any,      let value = 'initial';
+
+      };      const { result, rerender } = renderHook(() => useDebounce(value, 500));
+
+            
+
+      global.Image = jest.fn().mockImplementation(() => mockImage);      expect(result.current).toBe('initial');
+
+            
+
+      const promise = preloadImages(sources);      // Change value
+
+            value = 'updated';
+
+      // Simulate successful image load      rerender();
+
+      setTimeout(() => {      
+
+        if (mockImage.onload) mockImage.onload();      // Should still be initial before delay
+
+      }, 0);      expect(result.current).toBe('initial');
+
+            
+
+      await expect(promise).resolves.toEqual([undefined, undefined]);      // Fast forward time
+
+    }, 10000);      act(() => {
+
+  });        jest.advanceTimersByTime(500);
+
       });
-      
-      // Now should be updated
-      expect(result.current).toBe('updated');
-    });
 
-    it('should reset timer on rapid changes', () => {
+  describe('trackWebVitals', () => {      
+
+    it('should not throw when web-vitals is not available', () => {      // Now should be updated
+
+      expect(() => trackWebVitals()).not.toThrow();      expect(result.current).toBe('updated');
+
+    });    });
+
+  });
+
+});    it('should reset timer on rapid changes', () => {
       let value = 'initial';
       const { result, rerender } = renderHook(() => useDebounce(value, 500));
       

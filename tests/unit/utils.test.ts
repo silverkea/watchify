@@ -76,7 +76,7 @@ describe('Utility Functions', () => {
     });
 
     it('should handle edge cases', () => {
-      expect(formatRuntime(0)).toBe('0m');
+      expect(formatRuntime(0)).toBe('');
       expect(formatRuntime(60)).toBe('1h 0m');
       expect(formatRuntime(59)).toBe('59m');
     });

@@ -178,6 +178,7 @@ export function DateTimePicker({
               error && "border-red-500 focus:border-red-500 focus:ring-red-500"
             )}
             required={required}
+            data-testid="watch-party-date"
           />
         </div>
 
@@ -196,6 +197,7 @@ export function DateTimePicker({
               error && "border-red-500 focus:border-red-500 focus:ring-red-500"
             )}
             required={required}
+            data-testid="watch-party-time"
           />
         </div>
       </div>

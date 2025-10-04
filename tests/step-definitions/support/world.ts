@@ -10,8 +10,8 @@ import { setWorldConstructor } from '@cucumber/cucumber';
 function PlaywrightWorld(this: any) {
   // Configuration from environment variables
   this.browserName = process.env.BROWSER || 'chromium';
-  this.headless = !process.env.HEADED && !process.env.DEBUG;
-  this.debug = !!process.env.DEBUG;
+  this.headless = process.env.HEADED !== 'true' && process.env.DEBUG !== 'true';
+  this.debug = process.env.DEBUG === 'true';
   
   /**
    * Initialize browser, context, and page before scenarios

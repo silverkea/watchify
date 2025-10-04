@@ -118,6 +118,7 @@ export function SearchBox({
           maxLength={100}
           aria-label="Search movies"
           aria-describedby="search-help"
+          data-testid="movie-search-input"
         />
         
         {/* Clear Button */}
@@ -134,6 +135,7 @@ export function SearchBox({
               "dark:text-gray-500 dark:hover:text-gray-300"
             )}
             aria-label="Clear search"
+            data-testid="search-clear-button"
           >
             <X className="w-4 h-4" />
           </Button>

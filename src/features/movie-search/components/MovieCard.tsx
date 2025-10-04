@@ -86,6 +86,7 @@ export function MovieCard({
         tabIndex={isClickable ? 0 : undefined}
         role={isClickable ? "button" : undefined}
         aria-label={isClickable ? `View details for ${movie.title}` : undefined}
+        data-testid="movie-card"
       >
         {/* Compact Poster */}
         <div className="relative w-24 h-32 flex-shrink-0">
@@ -150,6 +151,7 @@ export function MovieCard({
       tabIndex={isClickable ? 0 : undefined}
       role={isClickable ? "button" : undefined}
       aria-label={isClickable ? `View details for ${movie.title}` : undefined}
+      data-testid="movie-card"
     >
       {/* Poster */}
       <div className="relative aspect-[2/3] w-full">
