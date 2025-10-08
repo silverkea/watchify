@@ -120,7 +120,7 @@ export function CountdownTimer({
         "bg-red-50 dark:bg-red-900/20",
         "border border-red-200 dark:border-red-800",
         className
-      )}>
+      )} data-testid="countdown-timer">
         <Play className="w-6 h-6 text-red-600 dark:text-red-400 mr-2" />
         <span className="text-lg font-semibold text-red-600 dark:text-red-400">
           Watch Party Started!
@@ -135,7 +135,7 @@ export function CountdownTimer({
         "flex items-center space-x-2",
         getUrgencyClass(),
         className
-      )}>
+      )} data-testid="countdown-timer">
         {showIcon && <Clock className="w-4 h-4" />}
         <span className="font-mono text-sm">
           {timeLeft.days > 0 && `${timeLeft.days}d `}
@@ -155,7 +155,7 @@ export function CountdownTimer({
         // Light mode: subtle shadow, dark mode: neon glow
         "shadow-lg dark:shadow-[0_0_30px_rgba(168,85,247,0.4)]",
         className
-      )}>
+      )} data-testid="countdown-timer">
         {showIcon && (
           <div className="flex justify-center mb-4">
             <Clock className="w-8 h-8 text-slate-700 dark:text-purple-400" />
@@ -199,7 +199,7 @@ export function CountdownTimer({
       "bg-white dark:bg-gray-800",
       "border-gray-200 dark:border-gray-700",
       className
-    )}>
+    )} data-testid="countdown-timer">
       {showIcon && (
         <div className="flex items-center justify-center mb-4">
           <Clock className={cn("w-6 h-6 mr-2", getUrgencyClass())} />
