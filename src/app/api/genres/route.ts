@@ -10,6 +10,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getGenres, TMDBError, TMDBRateLimitError, TMDBServiceUnavailableError } from '@/lib/tmdb'
 import { GenresResponse } from '@/types'
 
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   try {
     // Fetch genres from TMDB

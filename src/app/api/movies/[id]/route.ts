@@ -10,6 +10,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getMovieDetails, TMDBError, TMDBRateLimitError, TMDBServiceUnavailableError } from '@/lib/tmdb'
 import { Movie } from '@/types'
 
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic'
+
 interface RouteParams {
   params: {
     id: string

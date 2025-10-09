@@ -10,9 +10,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { searchMovies, TMDBError, TMDBRateLimitError, TMDBServiceUnavailableError } from '@/lib/tmdb'
 import { MovieSearchResponse } from '@/types'
 
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
+    const { searchParams } = request.nextUrl
     const query = searchParams.get('q')
     const pageParam = searchParams.get('page')
     
