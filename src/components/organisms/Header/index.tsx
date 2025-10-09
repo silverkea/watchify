@@ -8,6 +8,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Film } from 'lucide-react';
+
 import { ThemeToggle } from '@/components/atoms/ThemeToggle';
 
 export function Header() {

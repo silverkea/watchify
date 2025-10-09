@@ -21,6 +21,7 @@ import {
   transformTMDBGenresResponse,
   GenresResponse 
 } from '@/types/genre'
+
 import { env } from './env'
 
 // TMDB API configuration

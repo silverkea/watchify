@@ -4,6 +4,7 @@
  */
 
 import { z } from 'zod'
+
 import { MovieSchema } from './movie'
 
 // Watch party status enum

@@ -17,6 +17,8 @@ import {
   CheckCircle,
   Calendar
 } from 'lucide-react';
+import { format, addMinutes } from 'date-fns';
+
 import { Button } from '@/components/atoms/Button';
 import { Badge } from '@/components/atoms/Badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -24,7 +26,6 @@ import { CountdownTimer } from '@/features/watch-party/components/CountdownTimer
 import { Header } from '@/components/organisms/Header';
 import { Movie, WatchParty } from '@/types';
 import { cn } from '@/lib/utils';
-import { format, addMinutes } from 'date-fns';
 
 interface WatchPartyPageProps {
   params: {

@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
+
 import { Input } from '@/components/atoms/Input';
 import { Button } from '@/components/atoms/Button';
 import { cn } from '@/lib/utils';

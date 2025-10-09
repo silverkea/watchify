@@ -7,11 +7,13 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { Search, AlertCircle, Loader2, Grid, List } from 'lucide-react';
-import { MovieCard } from '../components/MovieCard';
-import { GenreFilter } from '../components/GenreFilter';
+
 import { Button } from '@/components/atoms/Button';
 import { Movie, Genre } from '@/types';
 import { cn } from '@/lib/utils';
+
+import { GenreFilter } from '../components/GenreFilter';
+import { MovieCard } from '../components/MovieCard';
 
 export interface MovieGridProps {
   movies: Movie[];

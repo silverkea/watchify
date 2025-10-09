@@ -8,6 +8,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { Star, Calendar, Clock } from 'lucide-react';
+
 import { Badge } from '@/components/atoms/Badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Movie } from '@/types';

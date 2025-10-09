@@ -7,11 +7,12 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { Film, Sparkles, TrendingUp } from 'lucide-react';
+
 import { SearchBox } from '@/features/movie-search/components/SearchBox';
 import { MovieGrid } from '@/features/movie-search/components/MovieGrid';
 import { Header } from '@/components/organisms/Header';
 import { Movie, Genre } from '@/types';
-import { Film, Sparkles, TrendingUp } from 'lucide-react';
 
 interface SearchResponse {
   results: Movie[];
@@ -395,7 +396,7 @@ export default function HomePage() {
               <>
                 <Film className="w-5 h-5 text-purple-600" />
                 <h2 className="text-2xl font-semibold text-foreground">
-                  Search Results for "{searchQuery}"
+                  Search Results for &ldquo;{searchQuery}&rdquo;
                 </h2>
               </>
             ) : (

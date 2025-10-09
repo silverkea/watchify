@@ -15,13 +15,14 @@ import {
   Users, 
   ArrowLeft
 } from 'lucide-react';
+import { format } from 'date-fns';
+
 import { Button } from '@/components/atoms/Button';
 import { Badge } from '@/components/atoms/Badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DateTimePicker } from '@/features/watch-party/components/DateTimePicker';
 import { Movie, WatchParty } from '@/types';
 import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
 
 interface MovieDetailsPageProps {
   params: {

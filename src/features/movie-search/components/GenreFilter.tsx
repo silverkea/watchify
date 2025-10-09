@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Filter, X, ChevronDown, Check } from 'lucide-react';
+
 import { Button } from '@/components/atoms/Button';
 import { Badge } from '@/components/atoms/Badge';
 import { Genre } from '@/types';
