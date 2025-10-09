@@ -130,7 +130,7 @@ export default function HomePage() {
     }
   };
 
-  const loadMoreNowPlaying = async (startPage: number) => {
+  const loadMoreNowPlaying = useCallback(async (startPage: number) => {
     try {
       setLoading(true);
       setError(null);
@@ -175,7 +175,7 @@ export default function HomePage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedGenres]);
 
   const performSearch = useCallback(async (query: string, page: number = 1, append: boolean = false) => {
     console.log('performSearch called:', { query, page, append });
@@ -253,7 +253,7 @@ export default function HomePage() {
       console.log('Loading more search results, page:', currentPage + 1);
       performSearch(lastSearchQuery, currentPage + 1, true);
     }
-  }, [isNowPlayingMode, lastSearchQuery, hasMore, loading, currentPage, performSearch]);
+  }, [isNowPlayingMode, lastSearchQuery, hasMore, loading, currentPage, performSearch, loadMoreNowPlaying]);
 
   const handleMovieClick = useCallback((movie: Movie) => {
     router.push(`/movies/${movie.id}`);

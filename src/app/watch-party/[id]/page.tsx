@@ -5,7 +5,7 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { 
@@ -49,11 +49,7 @@ export default function WatchPartyPage({ params }: WatchPartyPageProps) {
   
   const router = useRouter();
 
-  useEffect(() => {
-    loadWatchPartyData();
-  }, [params.id]);
-
-  const loadWatchPartyData = async () => {
+  const loadWatchPartyData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -82,7 +78,11 @@ export default function WatchPartyPage({ params }: WatchPartyPageProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [params.id]);
+
+  useEffect(() => {
+    loadWatchPartyData();
+  }, [loadWatchPartyData]);
 
   const loadMovieDetails = async (movieId: number) => {
     try {

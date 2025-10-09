@@ -5,7 +5,7 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Calendar, Clock, AlertCircle } from 'lucide-react';
 import { format, addDays, isAfter, isBefore, parse, isValid } from 'date-fns';
 
@@ -58,7 +58,7 @@ export function DateTimePicker({
     }
   }, [value]);
 
-  const validateAndUpdate = (dateStr: string, timeStr: string) => {
+  const validateAndUpdate = useCallback((dateStr: string, timeStr: string) => {
     try {
       if (!dateStr || !timeStr) {
         setError(required ? 'Date and time are required' : null);
@@ -103,14 +103,14 @@ export function DateTimePicker({
       setError('Invalid date or time');
       if (onError) onError('Invalid date or time');
     }
-  };
+  }, [required, onError, onChange, minDate, maxDate]);
 
   // Validate and update parent when initial values are set
   useEffect(() => {
     if (selectedDate && selectedTime) {
       validateAndUpdate(selectedDate, selectedTime);
     }
-  }, [selectedDate, selectedTime]);
+  }, [selectedDate, selectedTime, validateAndUpdate]);
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newDate = e.target.value;

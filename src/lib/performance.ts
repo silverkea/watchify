@@ -72,6 +72,7 @@ export function useThrottle<T extends (...args: any[]) => any>(
   const lastCall = useRef<number>(0);
   const timeout = useRef<NodeJS.Timeout>();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   return useCallback(
     ((...args: Parameters<T>) => {
       const now = Date.now();
