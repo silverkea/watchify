@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <style>
+      @media (prefers-color-scheme: dark) {
+        .film-strip { fill: #8b5cf6; }
+        .film-holes { fill: #1e1b4b; }
+      }
+      @media (prefers-color-scheme: light) {
+        .film-strip { fill: #7c3aed; }
+        .film-holes { fill: #f8fafc; }
+      }
+    </style>
+  </defs>
+  
+  <!-- Film strip background -->
+  <rect class="film-strip" x="6" y="4" width="20" height="24" rx="2" ry="2"/>
+  
+  <!-- Film strip holes (top row) -->
+  <rect class="film-holes" x="8" y="6" width="2" height="2" rx="0.5"/>
+  <rect class="film-holes" x="11" y="6" width="2" height="2" rx="0.5"/>
+  <rect class="film-holes" x="14" y="6" width="2" height="2" rx="0.5"/>
+  <rect class="film-holes" x="17" y="6" width="2" height="2" rx="0.5"/>
+  <rect class="film-holes" x="20" y="6" width="2" height="2" rx="0.5"/>
+  <rect class="film-holes" x="23" y="6" width="2" height="2" rx="0.5"/>
+  
+  <!-- Main viewing area -->
+  <rect class="film-holes" x="8" y="10" width="16" height="12" rx="1"/>
+  
+  <!-- Film strip holes (bottom row) -->
+  <rect class="film-holes" x="8" y="24" width="2" height="2" rx="0.5"/>
+  <rect class="film-holes" x="11" y="24" width="2" height="2" rx="0.5"/>
+  <rect class="film-holes" x="14" y="24" width="2" height="2" rx="0.5"/>
+  <rect class="film-holes" x="17" y="24" width="2" height="2" rx="0.5"/>
+  <rect class="film-holes" x="20" y="24" width="2" height="2" rx="0.5"/>
+  <rect class="film-holes" x="23" y="24" width="2" height="2" rx="0.5"/>
+</svg>

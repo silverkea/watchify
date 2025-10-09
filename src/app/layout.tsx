@@ -10,6 +10,14 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Watchify - Movie Watch Parties',
   description: 'Schedule and share movie watch parties with friends',
+  icons: {
+    icon: [
+      {
+        url: '/favicon.svg',
+        type: 'image/svg+xml',
+      },
+    ],
+  },
 }
 
 export default function RootLayout({
