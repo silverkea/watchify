@@ -21,6 +21,7 @@ import { Button } from '@/components/atoms/Button';
 import { Badge } from '@/components/atoms/Badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DateTimePicker } from '@/features/watch-party/components/DateTimePicker';
+import { WatchPartyModal } from '@/features/watch-party/components/WatchPartyModal';
 import { Movie, WatchParty } from '@/types';
 import { cn } from '@/lib/utils';
 
@@ -38,6 +39,50 @@ export default function MovieDetailsPage({ params }: MovieDetailsPageProps) {
   const [isCreatingParty, setIsCreatingParty] = useState(false);
   const [selectedDateTime, setSelectedDateTime] = useState<Date | null>(null);
   const [dateTimeError, setDateTimeError] = useState<string | null>(null);
+  const [partyCreated, setPartyCreated] = useState(false);
+
+  // Modal logic extracted
+  const handleOpenModal = () => {
+    // Reset modal state to default values (tomorrow at 8 PM)
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(20, 0, 0, 0);
+    setSelectedDateTime(tomorrow);
+    setDateTimeError(null);
+    setPartyCreated(false);
+    setShowScheduleModal(true);
+  };
+  const handleCloseModal = () => {
+    setShowScheduleModal(false);
+    setSelectedDateTime(null);
+    setDateTimeError(null);
+    setPartyCreated(false);
+  };
+  const handleCreateParty = async (date: Date) => {
+    if (!movie || !date || partyCreated) return;
+    try {
+      setIsCreatingParty(true);
+      const watchPartyData = {
+        movieId: movie.id,
+        scheduledTime: date.toISOString(),
+        movieTitle: movie.title,
+        moviePoster: movie.posterPath
+      };
+      const encodedData = btoa(JSON.stringify(watchPartyData))
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=/g, '');
+      setShowScheduleModal(false); // Close modal before navigation
+      setSelectedDateTime(null);
+      setDateTimeError(null);
+      setPartyCreated(true);
+      router.push(`/watch-party/${encodedData}`);
+    } catch (err) {
+      setError('Failed to create watch party');
+    } finally {
+      setIsCreatingParty(false);
+    }
+  };
   
   const router = useRouter();
 
@@ -275,7 +320,7 @@ export default function MovieDetailsPage({ params }: MovieDetailsPageProps) {
             <div>
               <Button
                 variant="primary"
-                onClick={() => setShowScheduleModal(true)}
+                onClick={handleOpenModal}
                 disabled={isCreatingParty}
                 data-testid="schedule-watch-party-button"
               >
@@ -319,90 +364,17 @@ export default function MovieDetailsPage({ params }: MovieDetailsPageProps) {
       </div>
 
       {/* Watch Party Creation Modal */}
-      {showScheduleModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" data-testid="watch-party-modal">
-          <div className="bg-card rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 space-y-6">
-              <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-foreground">
-                  Schedule Watch Party
-                </h2>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowScheduleModal(false)}
-                  className="p-2"
-                  data-testid="modal-close-button"
-                >
-                  ×
-                </Button>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3 p-3 bg-muted rounded-lg">
-                  <div className="relative w-12 h-16 rounded overflow-hidden flex-shrink-0">
-                    {movie.posterPath ? (
-                      <Image
-                        src={`https://image.tmdb.org/t/p/w500${movie.posterPath}`}
-                        alt={movie.title}
-                        fill
-                        className="object-cover"
-                      />
-                    ) : (
-                      <Skeleton className="w-full h-full" />
-                    )}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-medium text-foreground truncate">
-                      {movie.title}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      {movie.runtime && `${movie.runtime}m`}
-                      {movie.runtime && releaseYear && ' • '}
-                      {releaseYear}
-                    </div>
-                  </div>
-                </div>
-
-                <DateTimePicker
-                  value={selectedDateTime || undefined}
-                  onChange={setSelectedDateTime}
-                  onError={setDateTimeError}
-                  required
-                  label="When should the watch party start?"
-                />
-              </div>
-
-              <div className="flex space-x-3">
-                <Button
-                  variant="ghost"
-                  onClick={() => setShowScheduleModal(false)}
-                  className="flex-1"
-                  data-testid="cancel-watch-party-button"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant="primary"
-                  onClick={handleCreateWatchParty}
-                  disabled={!selectedDateTime || !!dateTimeError || isCreatingParty}
-                  className="flex-1"
-                  data-testid="create-watch-party-button"
-                >
-                  {isCreatingParty ? (
-                    <>Creating...</>
-                  ) : (
-                    <>
-                      <Users className="w-4 h-4 mr-2" />
-                      Create Party
-                    </>
-                  )}
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <WatchPartyModal
+        movie={movie}
+        open={showScheduleModal}
+        onClose={handleCloseModal}
+        onCreate={handleCreateParty}
+        isCreating={isCreatingParty}
+        selectedDateTime={selectedDateTime}
+        setSelectedDateTime={setSelectedDateTime}
+        dateTimeError={dateTimeError}
+        setDateTimeError={setDateTimeError}
+      />
     </main>
   );
 }
