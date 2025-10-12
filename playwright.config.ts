@@ -7,11 +7,11 @@ import { defineConfig, devices } from '@playwright/test';
  * browser automation testing across multiple browsers and devices.
  */
 export default defineConfig({
-  // Test directory - points to where Cucumber will run tests
-  testDir: './tests',
+  // Test directory - points to where Playwright tests are located
+  testDir: './tests/e2e',
   
   // Run tests in files matching this pattern
-  testMatch: /.*\.steps\.ts$/,
+  testMatch: /.*\.spec\.ts$/,
   
   // Maximum time one test can run for
   timeout: 30 * 1000,
@@ -41,7 +41,7 @@ export default defineConfig({
   // Shared settings for all the projects below
   use: {
     // Base URL to use in actions like `await page.goto('/')`
-    baseURL: process.env.BASE_URL || 'http://localhost:3000',
+    baseURL: process.env.BASE_URL || 'http://localhost:3001',
     
     // Collect trace when retrying the failed test
     trace: 'on-first-retry',
@@ -79,25 +79,34 @@ export default defineConfig({
     // Mobile testing
     {
       name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
+      use: { 
+        ...devices['Pixel 5'],
+        hasTouch: true
+      },
     },
     
     {
       name: 'Mobile Safari',
-      use: { ...devices['iPhone 12'] },
+      use: { 
+        ...devices['iPhone 12'],
+        hasTouch: true
+      },
     },
     
     // Tablet testing
     {
       name: 'iPad',
-      use: { ...devices['iPad Pro'] },
+      use: { 
+        ...devices['iPad Pro'],
+        hasTouch: true
+      },
     }
   ],
 
   // Run your local dev server before starting the tests
   webServer: {
     command: 'npm run dev',
-    url: 'http://localhost:3000',
+    url: 'http://localhost:3001',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
   },
