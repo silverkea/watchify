@@ -1,7 +1,16 @@
 import type { StorybookConfig } from '@storybook/nextjs'
 
 const config: StorybookConfig = {
-  stories: ['../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  stories: [
+    // Organize stories by atomic design hierarchy
+    '../src/components/atoms/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    '../src/components/molecules/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    '../src/components/organisms/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    '../src/components/templates/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    '../src/features/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    // Fallback for any other stories
+    '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+  ],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
@@ -9,6 +18,8 @@ const config: StorybookConfig = {
     '@storybook/addon-a11y',
     '@storybook/addon-viewport',
     '@storybook/addon-docs',
+    '@storybook/addon-controls',
+    '@storybook/addon-backgrounds',
   ],
   framework: {
     name: '@storybook/nextjs',
@@ -17,6 +28,7 @@ const config: StorybookConfig = {
   staticDirs: ['../public'],
   docs: {
     autodocs: 'tag',
+    defaultName: 'Documentation',
   },
   typescript: {
     check: false,
