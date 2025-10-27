@@ -16,10 +16,8 @@ A modern movie watch party platform built with Next.js 14, TypeScript, and Tailw
 
 - **Framework**: Next.js 14 with App Router and TypeScript
 - **Styling**: Tailwind CSS with ShadCN/UI components
-- **Database**: Vercel KV for watch party data storage
 - **External API**: The Movie Database (TMDB) for movie information
 - **Testing**: Jest (unit), Cucumber + Playwright (E2E), Storybook (component docs)
-- **Deployment**: Vercel with serverless functions
 
 ## Getting Started
 
@@ -27,13 +25,12 @@ A modern movie watch party platform built with Next.js 14, TypeScript, and Tailw
 
 - Node.js 18+ and npm
 - TMDB API key ([get one here](https://www.themoviedb.org/settings/api))
-- Vercel KV database (for production)
 
 ### Installation
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/watchify.git
+   git clone https://github.com/silverkea/watchify.git
    cd watchify
    ```
 
@@ -44,7 +41,7 @@ A modern movie watch party platform built with Next.js 14, TypeScript, and Tailw
 
 3. **Set up environment variables**
    ```bash
-   cp .env.example .env.local
+   cp .env.example .env
    ```
    
    Fill in your environment variables:
@@ -52,11 +49,9 @@ A modern movie watch party platform built with Next.js 14, TypeScript, and Tailw
    # TMDB API Configuration
    TMDB_API_KEY=your_tmdb_api_key_here
    TMDB_BASE_URL=https://api.themoviedb.org/3
-   TMDB_IMAGE_BASE_URL=https://image.tmdb.org/t/p
 
-   # Vercel KV (for production)
-   KV_REST_API_URL=your_kv_rest_api_url
-   KV_REST_API_TOKEN=your_kv_rest_api_token
+   # Next.js Configuration  
+   NEXT_PUBLIC_APP_URL=http://localhost:3000
    ```
 
 4. **Run the development server**
@@ -229,10 +224,11 @@ src/components/
 ### Movie Search
 - `GET /api/movies/search?q=query` - Search movies
 - `GET /api/movies/[id]` - Get movie details
+- `GET /api/movies/popular` - Get popular movies
+- `GET /api/genres` - Get movie genres
 
-### Watch Parties  
-- `POST /api/watch-party/create` - Create watch party
-- `GET /api/watch-party/[id]` - Get watch party details
+### Health Check
+- `GET /api/health` - Application health status
 
 ## Performance
 
@@ -241,7 +237,6 @@ src/components/
 - **Image Optimization**: Next.js Image with WebP/AVIF formats
 - **Lazy Loading**: Intersection Observer for images and components
 - **Code Splitting**: Automatic with Next.js App Router
-- **Caching**: API responses cached in Vercel KV
 - **Compression**: Gzip/Brotli enabled
 - **Performance Budget**: <3s initial load, <2s search response
 
@@ -258,28 +253,7 @@ npm run audit:lighthouse
 npm run analyze
 ```
 
-## Deployment
-
-### Vercel (Recommended)
-
-1. **Connect to Vercel**
-   ```bash
-   npm install -g vercel
-   vercel
-   ```
-
-2. **Configure Environment Variables** in Vercel dashboard
-   - `TMDB_API_KEY`
-   - `TMDB_BASE_URL`
-   - `KV_REST_API_URL`
-   - `KV_REST_API_TOKEN`
-
-3. **Deploy**
-   ```bash
-   vercel --prod
-   ```
-
-### Manual Build
+## Build for Production
 
 ```bash
 # Build for production
@@ -300,15 +274,15 @@ npm start
 
 2. **Playwright Test Failures**
    - Update browsers: `npx playwright install`
-   - Clear test cache: `rm -rf test-results/`
+   - Clear test cache: `npm run clean`
    - Check viewport sizes match expected layout
 
 3. **TypeScript Errors**
    - Run type check: `npm run type-check`
-   - Regenerate types: `npm run generate-types`
+   - Clear Next.js cache: `rm -rf .next/`
 
 4. **Styling Issues**
-   - Purge Tailwind cache: `rm -rf .next/`
+   - Clear Next.js cache: `npm run clean`
    - Check dark/light theme CSS variables
 
 ### Debug Commands
@@ -353,4 +327,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [The Movie Database (TMDB)](https://www.themoviedb.org/) for movie data
 - [ShadCN/UI](https://ui.shadcn.com/) for component primitives
 - [Playwright](https://playwright.dev/) for E2E testing framework
-- [Vercel](https://vercel.com/) for hosting and deployment
