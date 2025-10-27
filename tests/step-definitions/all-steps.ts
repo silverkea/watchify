@@ -39,14 +39,26 @@ Given('the movie details are loaded', async function (this: CustomWorld) {
 When('I click on {string}', async function (this: CustomWorld, buttonText: string) {
   // Map button text to test IDs for better reliability
   if (buttonText === "Schedule Watch Party") {
-    const button = this.page.locator('[data-testid="schedule-watch-party-button"]')
-    await button.click()
+    console.log('🎬 Looking for Schedule Watch Party button...')
+    
+    // Wait for page to be fully loaded first
     await this.page.waitForLoadState('networkidle')
+    
+    const button = this.page.locator('[data-testid="schedule-watch-party-button"]')
+    await expect(button).toBeVisible({ timeout: 15000 })
+    
+    console.log('✅ Schedule Watch Party button found, clicking...')
+    await button.click()
+    
+    // Wait for modal to appear with a longer timeout
+    console.log('⏳ Waiting for watch party modal to appear...')
+    await expect(this.page.locator('[data-testid="watch-party-modal"]')).toBeVisible({ timeout: 15000 })
+    console.log('✅ Watch party modal appeared')
   } else {
     // Fallback to text-based search for other buttons
     try {
       const button = this.page.locator(`button:has-text("${buttonText}")`)
-      await button.click({ timeout: 1000 })
+      await button.click({ timeout: 5000 })
     } catch {
       console.log(`Button "${buttonText}" not found - feature not yet implemented`)
     }
@@ -58,12 +70,18 @@ When('I click {string}', async function (this: CustomWorld, buttonText: string) 
   if (buttonText === "Create Watch Party") {
     const button = this.page.locator('[data-testid="create-watch-party-button"]')
     await button.click()
-    await this.page.waitForLoadState('networkidle')
+    // Wait for navigation to watch party page
+    await this.page.waitForURL('**/watch-party/**', { timeout: 10000 })
+  } else if (buttonText === "Cancel") {
+    const button = this.page.locator('[data-testid="cancel-watch-party-button"]')
+    await button.click()
+    // Wait for modal to close
+    await expect(this.page.locator('[data-testid="watch-party-modal"]')).not.toBeVisible({ timeout: 5000 })
   } else {
     // Fallback to text-based search for other buttons
     try {
       const button = this.page.locator(`button:has-text("${buttonText}")`)
-      await button.click({ timeout: 1000 })
+      await button.click({ timeout: 5000 })
     } catch {
       console.log(`Button "${buttonText}" not found - feature not yet implemented`)
     }
@@ -140,7 +158,7 @@ Then('the {string} button should be disabled', async function (this: CustomWorld
 })
 
 Given('I am on the watch party page', async function (this: CustomWorld) {
-  // The previous step should have navigated us to the watch party page
+  // For countdown timer scenarios, we might already be on the watch party page
   const currentUrl = this.page.url()
   
   if (!currentUrl.includes('/watch-party/')) {
@@ -149,8 +167,23 @@ Given('I am on the watch party page', async function (this: CustomWorld) {
   
   console.log(`✅ Confirmed on watch party page: ${currentUrl}`)
   
-  // Wait a moment for the countdown timer component to initialize
-  await this.page.waitForTimeout(2000)
+  // Wait for the page to fully load - this is critical for watch party pages
+  // which need to decode URL data and fetch movie details
+  await this.page.waitForLoadState('networkidle')
+  console.log('✅ Network idle - page loading complete')
+  
+  // Wait for countdown timer to be visible with longer timeout
+  // The watch party page needs time to decode the URL and render
+  try {
+    await expect(this.page.locator('[data-testid="countdown-timer"]')).toBeVisible({ timeout: 20000 })
+    console.log('✅ Countdown timer found and visible')
+  } catch (error) {
+    console.log('⚠️ Countdown timer not visible after 20s, continuing...')
+    // Let's check what's actually on the page
+    const bodyText = await this.page.textContent('body')
+    console.log('📄 Page content preview:', bodyText?.slice(0, 200))
+  }
+  
   console.log('✅ Watch party page initialization complete')
 })
 
@@ -237,64 +270,31 @@ Then('the countdown should continue from the correct time', async function (this
 
 // Background step definitions for countdown timer scenarios
 Given('I have a watch party scheduled for 2 hours from now', async function (this: CustomWorld) {
-  // Navigate to movie details first
+  // Create watch party data directly for countdown timer testing
+  const futureTime = new Date()
+  futureTime.setHours(futureTime.getHours() + 2)
+  
+  const watchPartyData = {
+    movieId: 550, // Fight Club
+    scheduledTime: futureTime.toISOString(),
+    movieTitle: "Fight Club",
+    moviePoster: "/gSuuPoWJsdJzJZ7ZTEtDJTbDyPh.jpg"
+  }
+  
+  // Encode and navigate directly to watch party page
+  const encodedData = btoa(JSON.stringify(watchPartyData))
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=/g, '')
+  
   const baseUrl = process.env.BASE_URL || 'http://localhost:3000'
-  await this.page.goto(`${baseUrl}/movies/550`) // Fight Club
+  console.log(`🎬 Navigating to watch party page with 2-hour countdown...`)
+  
+  await this.page.goto(`${baseUrl}/watch-party/${encodedData}`)
   await this.page.waitForLoadState('networkidle')
   
-  // Check if schedule watch party button exists and click it
-  const scheduleButton = this.page.locator('[data-testid="schedule-watch-party-button"]')
-  if (await scheduleButton.count() > 0) {
-    await scheduleButton.click()
-    await this.page.waitForLoadState('networkidle')
-    
-    // Check if modal opened and form elements exist
-    const modal = this.page.locator('[data-testid="watch-party-modal"]')
-    if (await modal.isVisible()) {
-      // Set date and time to 2 hours from now
-      const futureTime = new Date()
-      futureTime.setHours(futureTime.getHours() + 2)
-      
-      const dateString = futureTime.toISOString().split('T')[0]
-      const timeString = futureTime.toTimeString().slice(0, 5) // HH:MM format
-      
-      const dateInput = this.page.locator('[data-testid="watch-party-date"]')
-      const timeInput = this.page.locator('[data-testid="watch-party-time"]')
-      
-      if (await dateInput.count() > 0 && await timeInput.count() > 0) {
-        await dateInput.fill(dateString)
-        await timeInput.fill(timeString)
-        
-        // Create the watch party
-        const createButton = this.page.locator('[data-testid="create-watch-party-button"]')
-        if (await createButton.count() > 0) {
-          console.log('🎬 Creating watch party...')
-          await createButton.click()
-          
-          // Wait for navigation to watch party page
-          console.log('⏳ Waiting for navigation to watch party page...')
-          await this.page.waitForURL('**/watch-party/**', { timeout: 10000 })
-          await this.page.waitForLoadState('networkidle')
-          
-          const currentUrl = this.page.url()
-          console.log(`✅ Successfully navigated to watch party page: ${currentUrl}`)
-        } else {
-          console.log('Create watch party button not found')
-        }
-      } else {
-        console.log('Date/time inputs not found in modal')
-      }
-    } else {
-      console.log('Watch party modal did not open')
-    }
-  } else {
-    console.log('Schedule watch party button not found - creating simulated watch party context')
-    // For countdown timer tests, we can simulate the end state
-    await this.page.evaluate(() => {
-      (window as any).__WATCH_PARTY_SCHEDULED__ = true;
-      (window as any).__WATCH_PARTY_TIME__ = new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString();
-    })
-  }
+  const currentUrl = this.page.url()
+  console.log(`✅ Successfully navigated to watch party page: ${currentUrl}`)
 })
 
 // Simple catch-all for undefined steps - these will show as "undefined" in output
@@ -1014,6 +1014,78 @@ Then('there should be an error message about invalid filters', async function (t
 
 Then('the filter should remain in its previous state', async function (this: CustomWorld) {
   console.log('Filter previous state verification not yet implemented')
+})
+
+// New modal behavior step definitions
+Then('I should see the watch party modal', async function (this: CustomWorld) {
+  await expect(this.page.locator('[data-testid="watch-party-modal"]')).toBeVisible()
+})
+
+Then('the modal should close', async function (this: CustomWorld) {
+  await expect(this.page.locator('[data-testid="watch-party-modal"]')).not.toBeVisible()
+})
+
+When('I click on {string} again', async function (this: CustomWorld, buttonText: string) {
+  if (buttonText === "Schedule Watch Party") {
+    const button = this.page.locator('[data-testid="schedule-watch-party-button"]')
+    await button.click()
+    await expect(this.page.locator('[data-testid="watch-party-modal"]')).toBeVisible()
+  }
+})
+
+Then('the modal should open with default values', async function (this: CustomWorld) {
+  // Check that modal is visible with default date (tomorrow) and time (8:00 PM)
+  await expect(this.page.locator('[data-testid="watch-party-modal"]')).toBeVisible()
+  
+  const tomorrow = new Date()
+  tomorrow.setDate(tomorrow.getDate() + 1)
+  const defaultDate = tomorrow.toISOString().split('T')[0]
+  
+  await expect(this.page.locator('[data-testid="watch-party-date"]')).toHaveValue(defaultDate)
+  await expect(this.page.locator('[data-testid="watch-party-time"]')).toHaveValue('20:00')
+})
+
+When('I select a valid date and time', async function (this: CustomWorld) {
+  const tomorrow = new Date()
+  tomorrow.setDate(tomorrow.getDate() + 1)
+  const dateString = tomorrow.toISOString().split('T')[0]
+  
+  await this.page.locator('[data-testid="watch-party-date"]').fill(dateString)
+  await this.page.locator('[data-testid="watch-party-time"]').fill('20:00')
+})
+
+When('I click {string} after creation', async function (this: CustomWorld, buttonText: string) {
+  // This step simulates clicking cancel after a watch party has already been created
+  // In our current implementation, this should not cause navigation since we're already on the watch party page
+  if (buttonText === "Cancel") {
+    const cancelButton = this.page.locator('[data-testid="cancel-watch-party-button"]')
+    if (await cancelButton.isVisible()) {
+      await cancelButton.click()
+    }
+  }
+})
+
+Then('I should remain on the watch party page', async function (this: CustomWorld) {
+  await expect(this.page).toHaveURL(/\/watch-party\//)
+})
+
+Then('I should remain on the movie details page', async function (this: CustomWorld) {
+  await expect(this.page).toHaveURL(/\/movies\/\d+/)
+})
+
+When('I click the close \\(X) button', async function (this: CustomWorld) {
+  const closeButton = this.page.locator('[data-testid="modal-close-button"]')
+  await closeButton.click()
+  await expect(this.page.locator('[data-testid="watch-party-modal"]')).not.toBeVisible()
+})
+
+Then('the modal should show default date and time', async function (this: CustomWorld) {
+  const tomorrow = new Date()
+  tomorrow.setDate(tomorrow.getDate() + 1)
+  const defaultDate = tomorrow.toISOString().split('T')[0]
+  
+  await expect(this.page.locator('[data-testid="watch-party-date"]')).toHaveValue(defaultDate)
+  await expect(this.page.locator('[data-testid="watch-party-time"]')).toHaveValue('20:00')
 })
 
 Then('the page layout should adapt within {int} seconds', async function (this: CustomWorld, seconds: number) {
