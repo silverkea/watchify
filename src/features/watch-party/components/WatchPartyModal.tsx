@@ -7,7 +7,6 @@ import React from 'react';
 import Image from 'next/image';
 
 import { Movie } from '@/types/movie';
-
 import { Button } from '@/components/atoms/Button';
 import { Skeleton } from '@/components/ui/skeleton';
 
